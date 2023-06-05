@@ -46,7 +46,7 @@ function Nickname({setNickname, nickname}) {
     )
 }
 
-export default Nickname
+export default Nickname;
 
 const styles = StyleSheet.create({
     nicknameContainer: {

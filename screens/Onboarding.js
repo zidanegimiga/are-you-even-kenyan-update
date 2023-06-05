@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-
+import { useFonts } from 'expo-font';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import Nickname from '../components/Nickname';
 import Avatar from '../components/Avatar';
 
-const Onboarding = () => {
+const Onboarding = ({navigation}) => {
   const [nickname, setNickname] = useState('');
+  const [loaded] = useFonts({
+    'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
+    'outfit-semibold': require('../assets/fonts/Outfit-SemiBold.ttf'),
+  });
 
-  const progressStepsStyle = { 
+  if (!loaded) {
+    return null;
+  }
+
+  const progressStepsStyle = {
     activeStepIconBorderColor: '#A80C89',
     progressBarColor: '#A80C89',
     completedCheckColor: 'white',
@@ -25,8 +33,17 @@ const Onboarding = () => {
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 8,
-    // position: "absolute",
-    // right: '50%'
+  }
+
+  const submitButtonStyle = {
+    width: '100%',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderColor: "#000000",
+    borderStyle: "solid",
+    borderWidth: 1
+
   }
   const previousButtonStyle = {
     backgroundColor: '#A80C89',
@@ -34,12 +51,16 @@ const Onboarding = () => {
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 8,
-    // position: "absolute",
-    // right: '50%'
   }
 
   const nextButtonTextStyle = {
-    color: "white", 
+    color: "white",
+    fontFamily: 'outfit-semibold',
+    textAlign: "center"
+  }
+
+  const submitButtonTextStyle = {
+    color: "black",
     fontFamily: 'outfit-semibold',
     textAlign: "center"
   }
@@ -66,32 +87,32 @@ const Onboarding = () => {
 
   const onSubmitSteps = () => {
     console.log('called on submit step.');
+    navigation.navigate('GameSelectionScreen')
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ProgressSteps {...progressStepsStyle}>
         <ProgressStep
-          // onNext={onPaymentStepComplete}
-          // onPrevious={onPrevStep}
           nextBtnText="Next >>>"
           nextBtnStyle={nextButtonStyle}
           nextBtnTextStyle={nextButtonTextStyle}
           nextBtnDisabled={nickname.length <= 0}
         >
-          <Nickname setNickname={setNickname} nickname={nickname}/>
+          <Nickname setNickname={setNickname} nickname={nickname} />
         </ProgressStep>
         <ProgressStep
           onNext={onNextStep}
           onPrevious={onPrevStep}
-          nextBtnText="Submit >>>"
-          nextBtnStyle={nextButtonStyle}
-          nextBtnTextStyle={nextButtonTextStyle}
-          previousBtnText="<<< Back"
-          previousBtnStyle={previousButtonStyle}
-          previousBtnTextStyle={nextButtonTextStyle}
+          onSubmit={onSubmitSteps}
+          finishBtnText="Skip"
+          nextBtnStyle={submitButtonStyle}
+          nextBtnTextStyle={submitButtonTextStyle}
+          previousBtnText="Back"
+          previousBtnStyle={submitButtonStyle}
+          previousBtnTextStyle={submitButtonTextStyle}
         >
-          <Avatar/>
+          <Avatar />
         </ProgressStep>
       </ProgressSteps>
     </SafeAreaView>

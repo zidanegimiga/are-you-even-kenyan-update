@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './screens/Home';
 import Onboarding from './screens/Onboarding';
+import GameSelectionScreen from './screens/GameSelection/GameSelectionScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
         <Stack.Screen name="Onboarding" component={Onboarding} options={{headerShown: false}}/>
+        <Stack.Screen name="GameSelectionScreen" component={GameSelectionScreen} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -39,8 +41,6 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 48,
     flexDirection: "row",
-    // justifyContent: "center",
-    // alignItems: "center"
   },
 
   button: {

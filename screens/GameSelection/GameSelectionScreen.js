@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Leaderboard from './Leaderboard';
 import Information from './Information';
 import SelectGame from './SelectGame';
+import CustomTabBar from '../../components/CustomTabBar';
+
 
 const Tab = createBottomTabNavigator()
 
@@ -13,19 +15,29 @@ const tabBarStyles = {
 const GameSelectionScreen = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
-        showLabel: false,
-        style: {
-          position: "absolute",
-          bottom: 25,
-          left: 20,
-          right: 20,
-          elevation: 0,
-          backgroundColor: "#ffffff",
-          borderRadius: 8,
-          height: 90
+      tabBar={props => <CustomTabBar {...props} />}
+      screenOptions={({ route }) => (
+        {
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarInactiveTintColor: "black",
+          tabBarStyle: styles.tabBarStyle,
+          tabBarActiveTintColor: "green",
+          tabBarIcon: ({color, size, focused}) =>{
+            let iconName;
+
+            if(route.name === "home"){
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === "leaderboard"){
+              iconName = focused ? 'leaderboard' : 'leaderboard-outline';              
+            } else if( route.name === "information"){
+              iconName === focused ? 'information' : 'information-outline';
+            }
+
+            return <Icon name={iconName} size={22} color={color} />;
+          }
         }
-      }}
+      )}
     >
       <Tab.Screen name="SelectGame" component={SelectGame} />
       <Tab.Screen name="Leaderboard" component={Leaderboard} />

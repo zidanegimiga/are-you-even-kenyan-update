@@ -1,11 +1,13 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from './screens/Home';
-import Onboarding from './screens/Onboarding';
-import GameSelectionScreen from './screens/GameSelection/GameSelectionScreen';
+import Initial from './screens/Initial';
+import OnboardingNavigator from './navigations/Onboarding';
+import HomeNavigator from './navigations/Home';
+import AppDrawerNavigator from './navigations/AppDrawerNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,17 +15,19 @@ export default function App() {
   const [loaded] = useFonts({
     'mutiara-display-shadow': require('./assets/fonts/Mutiara_Display_02_Shadow.ttf'),
     'outfit-regular': require('./assets/fonts/Outfit-Regular.ttf'),
-  })
+  });
 
   if (!loaded) {
     return null;
   }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
-        <Stack.Screen name="Onboarding" component={Onboarding} options={{headerShown: false}}/>
-        <Stack.Screen name="GameSelectionScreen" component={GameSelectionScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="Initial" component={Initial} options={{headerShown: false}}/>
+        <Stack.Screen name="Onboarding" component={OnboardingNavigator} options={{headerShown: false}}/>
+        <Stack.Screen name="Home" component={HomeNavigator} options={{headerShown: false}}/>
+        <Stack.Screen name="Settings" component={AppDrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

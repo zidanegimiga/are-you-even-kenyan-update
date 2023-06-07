@@ -5,7 +5,7 @@ import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import Nickname from '../components/Nickname';
 import Avatar from '../components/Avatar';
 
-const Onboarding = ({navigation}) => {
+const OnboardingScreen = ({navigation}) => {
   const [nickname, setNickname] = useState('');
   const [loaded] = useFonts({
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
@@ -87,7 +87,7 @@ const Onboarding = ({navigation}) => {
 
   const onSubmitSteps = () => {
     console.log('called on submit step.');
-    navigation.navigate('GameSelectionScreen')
+    navigation.navigate('Home')
   };
 
   return (
@@ -126,4 +126,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Onboarding;
+export default OnboardingScreen;

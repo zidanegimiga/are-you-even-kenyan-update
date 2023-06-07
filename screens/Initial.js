@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 
-export default function Home({navigation}) {
+export default function Initial({navigation}) {
   const [loaded] = useFonts({
     'mutiara-display-shadow': require('../assets/fonts/Mutiara_Display_02_Shadow.ttf'),
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),

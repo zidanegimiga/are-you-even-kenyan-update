@@ -9,6 +9,7 @@ const SelectGame = () => {
   const headerHeight = useHeaderHeight();
   return (
     <View style={[styles.wrapper, {marginTop: headerHeight}]}>
+      <View style={styles.navigator}></View>
       <Swiper
         containerStyle={{
         }} 
@@ -103,6 +104,9 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "white"
+  },
+  navigator: {
+    height: 60
   },
   text: {
     color: '#fff',

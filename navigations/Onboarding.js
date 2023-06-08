@@ -14,11 +14,6 @@ function OnboardingNavigator() {
           options={{headerShown: false}}
           component={OnboardingScreen}
         />
-        <Stack.Screen
-          name={"Home"}
-          options={{headerShown: false}}
-          component={HomeNavigator}
-        />
       </Stack.Navigator>
     );
   }

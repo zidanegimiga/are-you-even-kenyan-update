@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Initial from './screens/Initial';
 import OnboardingNavigator from './navigations/Onboarding';
 import HomeNavigator from './navigations/Home';
-import AppDrawerNavigator from './navigations/AppDrawerNavigator';
+import Settings from './screens/Settings';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +27,7 @@ export default function App() {
         <Stack.Screen name="Initial" component={Initial} options={{headerShown: false}}/>
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={HomeNavigator} options={{headerShown: false}}/>
-        <Stack.Screen name="Settings" component={AppDrawerNavigator} />
+        <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

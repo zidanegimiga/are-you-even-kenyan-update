@@ -97,7 +97,7 @@ const OnboardingScreen = ({navigation}) => {
           nextBtnText="Next >>>"
           nextBtnStyle={nextButtonStyle}
           nextBtnTextStyle={nextButtonTextStyle}
-          nextBtnDisabled={nickname.length <= 0}
+          // nextBtnDisabled={nickname.length <= 0}
         >
           <Nickname setNickname={setNickname} nickname={nickname} />
         </ProgressStep>

@@ -6,7 +6,6 @@ import CustomTabBar from '../components/CustomTabBar';
 import SelectGame from '../screens/GameSelection/SelectGame';
 import Leaderboard from '../screens/GameSelection/Leaderboard';
 import Information from '../screens/GameSelection/Information';
-import AppDrawerNavigator from './AppDrawerNavigator';
 import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
@@ -32,7 +31,7 @@ function HomeNavigator() {
                     headerRightContainerStyle: {
                         padding: 16
                     },
-                    headerShown: true,
+                    headerShown: false,
                     tabBarShowLabel: false,
                     tabBarInactiveTintColor: "red",
                     tabBarStyle: styles.tabBarStyle,

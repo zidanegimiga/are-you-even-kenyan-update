@@ -87,7 +87,6 @@ const SelectGame = () => {
           />
         }
       >
-        <SelectGameCard game={games[0]}/>
         {
           games.map((game, index) => (
             <SelectGameCard game={game} key={index}/>

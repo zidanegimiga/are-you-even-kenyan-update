@@ -9,11 +9,13 @@ import {
     Easing,
     TouchableHighlight
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('screen');
 
 const SelectGameCard = ({ game }) => {
     const translateYImage = new Animated.Value(40);
+    const navigator = useNavigation();
 
     Animated.timing(translateYImage, {
         toValue: 0,
@@ -51,7 +53,7 @@ const SelectGameCard = ({ game }) => {
                             }
                         })
                     }]}
-                    onPress={() => console.log("Clicked")}                >
+                    onPress={() => navigator.navigate(game?.screen)}                >
                     <Text style={[styles.buttonText, { color: "#000000" }]}>Play</Text>
                 </TouchableHighlight>
             </View>

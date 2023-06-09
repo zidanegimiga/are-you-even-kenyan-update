@@ -15,7 +15,6 @@ function HomeNavigator() {
         'mutiara-display': require('../assets/fonts/Mutiara_Display_02.ttf'),
         'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
     })
-    console.log(Tab);
     return (
         <Tab.Navigator
             tabBar={props => <CustomTabBar {...props} />}
@@ -35,7 +34,6 @@ function HomeNavigator() {
                     tabBarShowLabel: false,
                     tabBarInactiveTintColor: "red",
                     tabBarStyle: styles.tabBarStyle,
-                    tabBarActiveTintColor: "green",
                     tabBarIcon: ({ color, size, focused }) => {
                         let iconName;
 
@@ -55,16 +53,8 @@ function HomeNavigator() {
             )}
         >
             <Tab.Screen name="SelectGame" component={SelectGame} />
-            <Tab.Screen name="Leaderboard" component={Leaderboard} screenOptions={{
-                headerTitleStyle: {
-                    color: "white",
-                    fontFamily: 'mutiara-display',
-                    fontSize: 23
-                },
-            }} />
-            <Tab.Screen name="Information" component={Information} headerStyle={{
-                backgroundColor: "#8967CE"
-            }} />
+            <Tab.Screen name="Leaderboard" component={Leaderboard} />
+            <Tab.Screen name="Information" component={Information} headerStyle={{}} />
         </Tab.Navigator>
     );
 }

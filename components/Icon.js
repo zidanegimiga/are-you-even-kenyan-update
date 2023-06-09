@@ -4,7 +4,10 @@ import { SvgXml } from 'react-native-svg';
 import Home from '../assets/icons/home.svg'
 import Leaderboard from '../assets/icons/leaderboard.svg'
 import Information from '../assets/icons/information.svg'
+import OptionsWhite from '../assets/icons/optionsWhite.svg'
 import Options from '../assets/icons/options.svg'
+import Close from '../assets/icons/close.svg'
+import Sound from '../assets/icons/sound.svg'
 import { useNavigation } from '@react-navigation/native';
 
 const Icon = ({ name, size, color }) => {
@@ -25,10 +28,26 @@ const Icon = ({ name, size, color }) => {
             <Information width={size} height={size} />
         )
     } else if (name === "settings") {
+        if(color === "white"){
+            return (
+                <TouchableOpacity onPress={goToInformationScreen}>
+                    <OptionsWhite width={32} height={32} fill={color}/>
+                </TouchableOpacity>
+            )
+        } else{
+            return (
+                <TouchableOpacity onPress={goToInformationScreen}>
+                    <Options width={32} height={32} fill={color}/>
+                </TouchableOpacity>
+            )
+        }
+    } else if (name === "close") {
         return (
-            <TouchableOpacity onPress={goToInformationScreen}>
-                <Options width={32} height={32} />
-            </TouchableOpacity>
+            <Close width={size} height={size} />
+        )
+    } else if (name === "sound") {
+        return (
+            <Sound width={size} height={size} />
         )
     }
 }

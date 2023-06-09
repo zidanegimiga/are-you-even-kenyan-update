@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image } from 'react-native';
+import Icon from '../components/Icon';
 import { useFonts } from 'expo-font';
 
 export default function Settings({navigation}) {
   const [loaded] = useFonts({
     'mutiara-display-shadow': require('../assets/fonts/Mutiara_Display_02_Shadow.ttf'),
-    'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
+    'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
   })
 
   if (!loaded) {
@@ -14,20 +15,12 @@ export default function Settings({navigation}) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <View>
-        <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 56, marginBottom: -8 }}>
-          SETTINGS
-        </Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={styles.closeIcon}>
+          <Icon name="close" color={"white"} />
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Onboarding')}>
-          <Text style={styles.buttonText}>Let's See</Text>
-        </TouchableOpacity>
-      </View>
-      <Image
-        source={require('../assets/images/kiccHomepage.png')}
-        style={styles.image}
-      />
     </View>
   );
 }
@@ -35,39 +28,27 @@ export default function Settings({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 64,
-    paddingLeft: 16,
-    backgroundColor: '#F8FF81',
+    padding: 16,
+    backgroundColor: '#FFFFFF',
   },
-
-  buttonContainer: {
-    width: '100%',
-    marginTop: 48,
+  header: {
+    width: "100%",
     flexDirection: "row",
-    // justifyContent: "center",
-    // alignItems: "center"
+    marginTop: 40,
+    alignItems: 'center',
+    paddingLeft: 118,
+    paddingBottom: 16,
+    borderBottomWidth: 2,
+    borderBottomColor: "#B7B7B7",
   },
-
-  button: {
-    width: '80%',
-    textAlign: 'center',
-    borderColor: '#A80C89',
-    borderWidth: 4,
-    borderStyle: "solid",
-    height: 48,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 8,
-  },
-
-  buttonText: {
+  headerTitle:{
+    fontFamily: 'outfit-medium',
     color: "#2F203B",
-    fontSize: 16,
-    fontFamily: 'outfit-regular'
+    fontSize: 24,
   },
-  image:{
-    position: 'absolute',
-    bottom: 0,
+  closeIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 120
   }
 });

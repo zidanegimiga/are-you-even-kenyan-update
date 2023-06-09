@@ -10,7 +10,7 @@ function OnboardingNavigator() {
     return (
       <Stack.Navigator screenOptions={{}} >
         <Stack.Screen
-          name={"Onboarding"}
+          name={"Onboarding - Home"}
           options={{headerShown: false}}
           component={OnboardingScreen}
         />

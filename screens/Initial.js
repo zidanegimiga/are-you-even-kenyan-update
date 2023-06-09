@@ -25,8 +25,11 @@ export default function Initial({navigation}) {
           EVEN
         </Text>
         <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 56, marginBottom: -8 }}>
-          KENYAN?
+          KENYAN
         </Text>
+        {/* <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 56, marginBottom: -8 }}>
+          ?????
+        </Text> */}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Onboarding')}>

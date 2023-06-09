@@ -1,24 +1,32 @@
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { useFonts } from 'expo-font';
 
-const image = {uri: 'https://reactjs.org/logo-og.png'};
-const aboutUs = "Throughout your academic journey, you relied heavily on last-minute cramming to navigate your way through school. You even managed to secure a spot at the university, thanks to those eleventh-hour preparations. Complaining seems to be your forte, whether it&#39;s about traffic, the education system, alcoblow, or Kenyan music. Deep down, you harbor a secret hope for a lucrative tender that will catapult your life towards greatness. Instead of taking to the streets to protest, you prefer to watch the news and vent your frustrations on Twitter, citing “Hii jua ni ya Mvua” will ruin your fancy Turkey suit. The current state of the economy dominates your conversations, but here&#39;s the question: Are you even Kenyan? Like seriously, are you? &quot;Are You Even Kenyan???&quot; is a mobile game designed to help you discover just how authentically Kenyan you truly are. Are you ready to embrace thecchallenge and put your Kenyan-ness to the test?"
+const aboutUs = "Throughout your academic journey, you relied heavily on last-minute cramming to navigate your way through school. You even managed to secure a spot at the university, thanks to those eleventh-hour preparations. Complaining seems to be your forte, whether it's about traffic, the education system, alcoblow, or Kenyan music. Deep down, you harbor a secret hope for a lucrative tender that will catapult your life towards greatness. Instead of taking to the streets to protest, you prefer to watch the news and vent your frustrations on Twitter, citing “Hii jua ni ya Mvua” will ruin your fancy Turkey suit. The current state of the economy dominates your conversations, but here's the question: Are you even Kenyan? Like seriously, are you? 'Are You Even Kenyan???' is a mobile game designed to help you discover just how authentically Kenyan you truly are. Are you ready to embrace thecchallenge and put your Kenyan-ness to the test?"
 
 const Information = () => {
+  const [loaded] = useFonts({
+    'outfit-medium': require('../../assets/fonts/Outfit-Medium.ttf'),
+    'outfit-regular': require('../../assets/fonts/Outfit-Regular.ttf'),
+  })
+
+  if (!loaded) {
+    return null;
+  }
   return (
     <View style={styles.container}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <View>
-          <Text>Info</Text>
+      <ImageBackground source={require('../../assets/images/infoBG.png')} resizeMode="cover" style={styles.image}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Info</Text>
         </View>
-        <View>
-          <Text>{aboutUs}</Text>
+        <View style={styles.aboutUs}>
+          <Text style={styles.text}>{aboutUs}</Text>
         </View>
-        <View style={styles.button}>
-          <Text>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>
             Visit our Website
           </Text>
-        </View>
+        </TouchableOpacity>
       </ImageBackground>      
     </View>
   )
@@ -30,20 +38,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    flexDirection: "column",
-    alignItems: "center"
+    // flexDirection: "column",
+    // alignItems: "center"
   },
   image: {
     flex: 1,
-    justifyContent: 'center',
+    paddingTop: 56,
+    alignItems: "center"
+  },
+  header: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 56
+  },
+  headerTitle: {
+    fontFamily: "outfit-medium",
+    fontSize: 24
+  },
+  aboutUs: {
+    padding: 16
   },
   text: {
-    color: 'white',
-    fontSize: 42,
-    lineHeight: 84,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    backgroundColor: '#000000c0',
+    fontFamily: "outfit-regular"
   },
   button: {
     backgroundColor: "#A80C89",
@@ -52,6 +72,14 @@ const styles = StyleSheet.create({
     height: 40,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: 16 
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: "outfit-regular",
+    color: "white",   
   }
 })

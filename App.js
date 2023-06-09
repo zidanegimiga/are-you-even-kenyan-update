@@ -8,6 +8,7 @@ import Initial from './screens/Initial';
 import OnboardingNavigator from './navigations/Onboarding';
 import HomeNavigator from './navigations/Home';
 import Settings from './screens/Settings';
+import OurRoads from './navigations/OurRoads';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,11 +24,13 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      <StatusBar style="auto"/>
       <Stack.Navigator>
         <Stack.Screen name="Initial" component={Initial} options={{headerShown: false}}/>
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={HomeNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
+        <Stack.Screen name="OurRoads" component={OurRoads} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

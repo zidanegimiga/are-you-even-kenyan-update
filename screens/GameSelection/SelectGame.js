@@ -15,13 +15,13 @@ const SelectGame = () => {
         containerStyle={{
         }}
         // autoplay={true}
-        // onIndexChanged={(index) => { 
-        //   setCurrentIndex(index);
-        //   const percent = ((currentIndex+1)/games.length) * 100
-        //   const percentage = percent.toString()
-        //   setProgress(percentage + '%')
-        //   console.log(progress)  
-        // }} 
+        onIndexChanged={(index) => { 
+          setCurrentIndex(index);
+          const percent = ((currentIndex+1)/games.length) * 100
+          const percentage = percent.toString()
+          setProgress(percentage + '%')
+          console.log(progress)  
+        }} 
         showsButtons={true}
         // bounces={true}
         index={0}

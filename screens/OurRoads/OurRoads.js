@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Platform, Dimension } from 'react-native'
 import Icon from '../../components/Icon'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import Swiper from 'react-native-swiper'
+import { GameContext } from '../../global/OurRoadsContext'
+import data from '../../global/Questions/data'
 
 const Question = () => {
   return (
     <View style={[styles.card]}>
-      {/* <ImageBackground style={[styles.innerCard]} resizeMode="cover" source={require('../../assets/icons/ourRoadsBG.png')}> */}
-        <Text ></Text>
-      {/* </ImageBackground> */}
+      <ImageBackground style={[styles.innerCard]} resizeMode="cover" source={require('../../assets/icons/ourRoadsBG.png')}>
+        <Text >
+          RUN
+        </Text>
+      </ImageBackground>
     </View>
   )
 }
@@ -22,7 +27,21 @@ const Footer = () => {
 const OurRoads = () => {
   const [progress, setProgress] = useState('0%')
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  const { score, setScore, totalScore, calculateScore } = useContext(GameContext);
+  
   const navigation = useNavigation()
+
+  const triggerGameEnd = () => {
+    calculateScore();
+   navigation.navigate('/games/ourRoads/congratulations')
+  }
+
+  const handleShowToast = () => {
+    setScore(score + 1)
+    animateToast();
+  }
+
   return (
     <View style={styles.pageContainer}>
       <View style={styles.header}>
@@ -34,9 +53,32 @@ const OurRoads = () => {
         </View>
       </View>
       <View style={styles.progressContainer}>
-        <View style={[styles.progress, { width: '50%' }]}></View>
+        <View style={[styles.progress, { width: progress }]}></View>
       </View>
-      <Question />
+      <Swiper
+        showsButtons={false}
+        // showsPagination={false}
+        loop={false}
+        onIndexChanged={(index) => { 
+          setCurrentIndex(index);
+          const percent = ((currentIndex+1)/data[0].qnA.length) * 100
+          const percentage = percent.toString()
+          setProgress(percentage + '%')
+          console.log(progress)  
+        }}
+        containerStyle={{
+          flexDirection: "row",
+          justifyContent: "center"
+        }} 
+      >
+      {
+        data[0].qnA.map((question, index) => (
+          <Question
+            key={index}
+          />
+        ))        
+      }
+      </Swiper>
     </View>
   )
 }
@@ -75,7 +117,7 @@ const styles = StyleSheet.create({
   card: {
     marginTop: 16,
     height: "80%",
-    width: "100%",
+    width: "80%",
     borderRadius: 8,
     elevation: Platform.OS === 'android' ? 4 : undefined,
     shadowColor: 'rgba(0, 0, 0, 0.17)',

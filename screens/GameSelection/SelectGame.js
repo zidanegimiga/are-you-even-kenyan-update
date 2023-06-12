@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import Swiper from 'react-native-swiper'
 import SelectGameCard from '../../components/selectGameCard'
 import games from '../../global/games'
@@ -7,13 +7,27 @@ import { useHeaderHeight } from '@react-navigation/elements';
 
 const SelectGame = () => {
   const headerHeight = useHeaderHeight();
+
   return (
     <View style={[styles.wrapper, {marginTop: headerHeight}]}>
       <View style={styles.navigator}></View>
       <Swiper
         containerStyle={{
-        }} 
+        }}
+        // autoplay={true}
+        // onIndexChanged={(index) => { 
+        //   setCurrentIndex(index);
+        //   const percent = ((currentIndex+1)/games.length) * 100
+        //   const percentage = percent.toString()
+        //   setProgress(percentage + '%')
+        //   console.log(progress)  
+        // }} 
         showsButtons={true}
+        // bounces={true}
+        index={0}
+        loop={false}
+        // horizontal={false}
+        // loadMinimal={true}
         nextButton={
           <View style={{
             width: 32,
@@ -112,5 +126,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold'
-  }
+  },
 })

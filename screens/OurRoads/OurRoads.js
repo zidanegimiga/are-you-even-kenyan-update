@@ -36,6 +36,15 @@ const OurRoads = () => {
     const scrollOffset = event.nativeEvent.contentOffset.x;
     const progress = scrollOffset / contentWidth;
     setScrollProgress(progress);
+
+    const contentOffset = event.nativeEvent.contentOffset.x;
+    const index = Math.round(contentOffset / event.nativeEvent.layoutMeasurement.width);
+    setCurrentIndex(index);
+    console.log("Index: ", currentIndex)
+  };
+
+  const handleMomentumScrollEnd = () => {
+    flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
   };
 
   const triggerGameEnd = () => {
@@ -50,13 +59,12 @@ const OurRoads = () => {
     )(event);
   };
 
-  const handleOnViewableItemsChanged = useRef(({ viewableItems, changed }) => {
+  const onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
-      const index = viewableItems[0].index;
+      const { index } = viewableItems[0];
       setCurrentIndex(index);
-      console.log("Index: ", currentIndex)
     }
-  }).current;
+  };
 
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
@@ -125,8 +133,8 @@ const OurRoads = () => {
             onScroll={handleScroll}
             keyExtractor={(item, index) => index.toString()}
             initialScrollIndex={0}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
           />
-          <Text>Current Index: {currentIndex}</Text>
         </View>
         <Footer />
       </SafeAreaView>
@@ -143,7 +151,7 @@ const OurRoads = () => {
           <View style={styles.modalContentContainer}>
             <Text style={styles.didYouKnowTitle}>Did you know?</Text>
             <Text style={styles.didYouKnowText}>
-              {data[0].qnA[1].t}
+              {data[0].qnA[currentIndex].t}
             </Text>
           </View>
         </ImageBackground>

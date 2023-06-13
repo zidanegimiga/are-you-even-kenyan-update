@@ -13,6 +13,7 @@ function Nickname({setNickname, nickname}) {
     const [loaded] = useFonts({
         'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
         'outfit-semibold': require('../assets/fonts/Outfit-SemiBold.ttf'),
+        'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
     });
 
     if (!loaded) {

@@ -1,16 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image } from 'react-native';
 import { useFonts } from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 export default function Initial({navigation}) {
   const [loaded] = useFonts({
     'mutiara-display-shadow': require('../assets/fonts/Mutiara_Display_02_Shadow.ttf'),
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
   })
+  const [ nextRoute, setNextRoute] = useState('')
 
+  const getData = async () => {
+    try {
+      const nickname = await AsyncStorage.getItem('@nickname')
+      if(nickname !== null) {
+        setNextRoute('Home')
+      } else {
+        setNextRoute('Onboarding')
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
+  useEffect(() => {
+    getData()
+  }, [])
   if (!loaded) {
     return null;
   }
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -32,7 +51,7 @@ export default function Initial({navigation}) {
         </Text> */}
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Onboarding')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(nextRoute)}>
           <Text style={styles.buttonText}>Let's See</Text>
         </TouchableOpacity>
       </View>

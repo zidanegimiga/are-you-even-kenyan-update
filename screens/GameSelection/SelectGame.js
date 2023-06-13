@@ -4,24 +4,33 @@ import Swiper from 'react-native-swiper'
 import SelectGameCard from '../../components/selectGameCard'
 import games from '../../global/games'
 import { useHeaderHeight } from '@react-navigation/elements';
+import Icon from '../../components/Icon'
+import { useFonts } from 'expo-font';
 
 const SelectGame = () => {
   const headerHeight = useHeaderHeight();
+  const [loaded] = useFonts({
+    'outfit-regular': require('../../assets/fonts/Outfit-Regular.ttf'),
+    'outfit-semibold': require('../../assets/fonts/Outfit-SemiBold.ttf'),
+    'outfit-medium': require('../../assets/fonts/Outfit-Medium.ttf'),
+});
+
+if (!loaded) {
+    return null;
+}
 
   return (
-    <View style={[styles.wrapper, {marginTop: headerHeight}]}>
-      <View style={styles.navigator}></View>
+    <View style={[styles.wrapper, { marginTop: headerHeight }]}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Select Game</Text>
+        <TouchableOpacity style={styles.closeIcon} onPress={() => navigation.goBack()}>
+          <Icon name="settings" />
+        </TouchableOpacity>
+      </View>
       <Swiper
         containerStyle={{
         }}
-        // autoplay={true}
-        onIndexChanged={(index) => { 
-          setCurrentIndex(index);
-          const percent = ((currentIndex+1)/games.length) * 100
-          const percentage = percent.toString()
-          setProgress(percentage + '%')
-          console.log(progress)  
-        }} 
+        // autoplay={true} 
         showsButtons={true}
         // bounces={true}
         index={0}
@@ -104,9 +113,9 @@ const SelectGame = () => {
       >
         {
           games.map((game, index) => (
-            <SelectGameCard game={game} key={index}/>
+            <SelectGameCard game={game} key={index} />
           ))
-        }              
+        }
       </Swiper>
     </View>
   )
@@ -119,12 +128,32 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white"
   },
-  navigator: {
-    height: 60
-  },
   text: {
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold'
   },
+  header: {
+    width: "100%",
+    flexDirection: "row",
+    marginTop: 44,
+    alignItems: 'center',
+    paddingLeft: 110,
+    paddingBottom: 16,
+  },
+  headerTitle: {
+    fontFamily: 'outfit-medium',
+    color: "#2F203B",
+    fontSize: 24,
+    textAlign: "center"
+  },
+  closeIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 80
+  },
+  settingText: {
+    fontFamily: 'outfit-medium',
+    fontSize: 20
+  }
 })

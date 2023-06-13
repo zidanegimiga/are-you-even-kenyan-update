@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import Nickname from '../components/Nickname';
 import Avatar from '../components/Avatar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnboardingScreen = ({navigation}) => {
   const [nickname, setNickname] = useState('');
@@ -14,6 +15,14 @@ const OnboardingScreen = ({navigation}) => {
 
   if (!loaded) {
     return null;
+  }
+
+  const storeNickname = async (nickname) => {
+    try {
+      await AsyncStorage.setItem('@nickname', nickname)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const progressStepsStyle = {
@@ -97,7 +106,8 @@ const OnboardingScreen = ({navigation}) => {
           nextBtnText="Next >>>"
           nextBtnStyle={nextButtonStyle}
           nextBtnTextStyle={nextButtonTextStyle}
-          // nextBtnDisabled={nickname.length <= 0}
+          nextBtnDisabled={nickname.length <= 0}
+          onNext={()=>storeNickname(nickname)}
         >
           <Nickname setNickname={setNickname} nickname={nickname} />
         </ProgressStep>

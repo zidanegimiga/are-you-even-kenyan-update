@@ -1,110 +1,187 @@
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Platform, Dimension } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Platform, Dimension, Animated, SafeAreaView, FlatList, Image, Dimensions } from 'react-native'
 import Icon from '../../components/Icon'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Swiper from 'react-native-swiper'
 import { GameContext } from '../../global/OurRoadsContext'
 import data from '../../global/Questions/data'
+import Question from '../../components/Question'
+import Nairobi from '../../assets/icons/nairobi.svg'
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { useFonts } from 'expo-font'
+import { Switch } from 'react-native'
 
-const Question = () => {
-  return (
-    <View style={[styles.card]}>
-      <ImageBackground style={[styles.innerCard]} resizeMode="cover" source={require('../../assets/icons/ourRoadsBG.png')}>
-        <Text >
-          RUN
-        </Text>
-      </ImageBackground>
-    </View>
-  )
-}
+const { width, height } = Dimensions.get('screen');
 
 const Footer = () => {
   return (
-    <View></View>
+    <View style={styles.footer}>
+      <Nairobi />
+    </View>
   )
 }
 
 const OurRoads = () => {
-  const [progress, setProgress] = useState('0%')
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [submitButton, showSubmitButton] = useState(false)
 
   const { score, setScore, totalScore, calculateScore } = useContext(GameContext);
-  
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const flatListRef = useRef(null);
+
+  const handleScroll = (event) => {
+    const contentWidth = event.nativeEvent.contentSize.width - windowWidth;
+    const scrollOffset = event.nativeEvent.contentOffset.x;
+    const progress = scrollOffset / contentWidth;
+    setScrollProgress(progress);
+  };
 
   const triggerGameEnd = () => {
     calculateScore();
-   navigation.navigate('/games/ourRoads/congratulations')
+    navigation.navigate('/games/ourRoads/congratulations')
   }
 
-  const handleShowToast = () => {
-    setScore(score + 1)
-    animateToast();
+  const handleOnScroll = event => {
+    Animated.event(
+      [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+      { useNativeDriver: false },
+    )(event);
+  };
+
+  const handleOnViewableItemsChanged = useRef(({ viewableItems, changed }) => {
+    if (viewableItems.length > 0) {
+      const index = viewableItems[0].index;
+      setCurrentIndex(index);
+      console.log("Index: ", currentIndex)
+    }
+  }).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
+
+  const bottomSheetModalRef = useRef(null)
+  const snapPoints = ['70%', '90%']
+
+  function showModal() {
+    bottomSheetModalRef.current?.present()
+  }
+
+  const windowWidth = Dimensions.get('window').width;
+
+  const [loaded] = useFonts({
+    'outfit-medium': require('../../assets/fonts/Outfit-Medium.ttf'),
+    'outfit-bold': require('../../assets/fonts/Outfit-Bold.ttf'),
+    'outfit-regular': require('../../assets/fonts/Outfit-Regular.ttf'),
+  })
+
+  if (!loaded) {
+    return null;
   }
 
   return (
-    <View style={styles.pageContainer}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.closeIcon} onPress={() => { navigation.goBack() }}>
-          <Icon name="close" />
-        </TouchableOpacity>
-        <View style={styles.closeIcon}>
-          <Icon name="settings" />
+    <BottomSheetModalProvider>
+      <SafeAreaView style={styles.fill}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.closeIcon} onPress={() => { navigation.navigate("Home") }}>
+            <Icon name="close" />
+          </TouchableOpacity>
+          <View style={styles.closeIcon}>
+            <Icon name="settings" />
+          </View>
         </View>
-      </View>
-      <View style={styles.progressContainer}>
-        <View style={[styles.progress, { width: progress }]}></View>
-      </View>
-      <Swiper
-        showsButtons={false}
-        // showsPagination={false}
-        loop={false}
-        onIndexChanged={(index) => { 
-          setCurrentIndex(index);
-          const percent = ((currentIndex+1)/data[0].qnA.length) * 100
-          const percentage = percent.toString()
-          setProgress(percentage + '%')
-          console.log(progress)  
-        }}
-        containerStyle={{
-          flexDirection: "row",
-          justifyContent: "center"
-        }} 
-      >
-      {
-        data[0].qnA.map((question, index) => (
-          <Question
-            key={index}
+        <View style={styles.progressContainerWrapper}>
+          <View style={styles.progressContainer}>
+            <View style={[styles.progress, { width: `${scrollProgress * 100}%` }]}></View>
+          </View>
+        </View>
+        <View style={styles.flatlistContainer}>
+          {/* <FlatList
+            ref={flatListRef}
+            initialScrollIndex={0}
+            initialNumToRender={1}
+            data={data[0].qnA}
+            renderItem={({ item, index }) => <Question questions={item} showSubmit={submitButton} onPressB={() => showModal()} onPressA={() => setScore(score + 1)} index={index} />}
+            horizontal
+            pagingEnabled
+            snapToAlignment="center"
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleOnScroll}
+            onViewableItemsChanged={handleOnViewableItemsChanged}
+            onEndReached={() => showSubmitButton(true)}
+            keyExtractor={(item, index) => index.toString()}
+          /> */}
+          <FlatList
+            ref={flatListRef}
+            snapToAlignment="center"
+            horizontal
+            pagingEnabled
+            onEndReached={() => showSubmitButton(true)}
+            showsHorizontalScrollIndicator={false}
+            data={data[0].qnA}
+            renderItem={({ item, index }) => <Question questions={item} showSubmit={submitButton} onPressB={() => showModal()} onPressA={() => setScore(score + 1)} index={index} />}
+            onScroll={handleScroll}
+            keyExtractor={(item, index) => index.toString()}
+            initialScrollIndex={0}
           />
-        ))        
-      }
-      </Swiper>
-    </View>
+          <Text>Current Index: {currentIndex}</Text>
+        </View>
+        <Footer />
+      </SafeAreaView>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={0}
+        snapPoints={snapPoints}
+        backgroundStyle={{
+          borderRadius: 24,
+          backgroundColor: "#5A3C96"
+        }}
+      >
+        <ImageBackground source={require('../../assets/icons/modalBG.png')} resizeMode='cover' style={styles.modalBG}>
+          <View style={styles.modalContentContainer}>
+            <Text style={styles.didYouKnowTitle}>Did you know?</Text>
+            <Text style={styles.didYouKnowText}>
+              {data[0].qnA[1].t}
+            </Text>
+          </View>
+        </ImageBackground>
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   )
 }
 
 export default OurRoads
 
 const styles = StyleSheet.create({
-  pageContainer: {
-    paddingTop: 56,
-    paddingHorizontal: 16,
+  modalBG: {
     flex: 1,
-    backgroundColor: "#fff"
+  },
+  fill: {
+    flex: 1,
+    position: 'relative',
+    padding: 16
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    padding: 16
   },
   closeIcon: {
     width: 32,
     height: 32
   },
+  progressContainerWrapper: {
+    width: '100%',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
   progressContainer: {
-    width: "100%",
-    height: 16,
+    width: "90%",
+    height: 8,
     backgroundColor: "#DCDCDC",
-    marginTop: 24,
     borderRadius: 8
   },
   progress: {
@@ -114,20 +191,30 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
   },
-  card: {
-    marginTop: 16,
-    height: "80%",
-    width: "80%",
-    borderRadius: 8,
-    elevation: Platform.OS === 'android' ? 4 : undefined,
-    shadowColor: 'rgba(0, 0, 0, 0.17)',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 4,
-    backgroundColor: '#fff'
+  flatlistContainer: {
+    height: 'auto',
+    elevation: 4
   },
-  innerCard: {
-    width: "100%",
-    height: "100%",
+
+  footer: {
+    position: "absolute",
+    bottom: 0
+  },
+
+  modalContentContainer: {
+    flex: 1,
+    padding: 24
+  },
+
+  didYouKnowTitle: {
+    color: "white",
+    fontSize: 24,
+    fontFamily: "outfit-bold"
+  },
+  didYouKnowText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: 'outfit-regular',
+    marginTop: 16
   }
 })

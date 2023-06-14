@@ -12,7 +12,7 @@ import SharableComponent from '../../components/SharableComponent'
 
 export default function Congratulations({navigation}) {
   // const [showIGStory, setShowIGStory] = useState(false)
-  const { totalScore, setTotalScore, lol, setScore } = useContext(GameContext)
+  const { totalScore, setTotalScore, setScore } = useContext(GameContext)
   // const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
   const [loaded] = useFonts({
@@ -25,7 +25,6 @@ export default function Congratulations({navigation}) {
   }
 
   const handleBackHome = () => {
-    console.log("Total: ", lol)
     setScore(0)
     setTotalScore(0)        
     navigation.navigate("Home")

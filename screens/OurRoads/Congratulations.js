@@ -12,7 +12,7 @@ import SharableComponent from '../../components/SharableComponent'
 
 export default function Congratulations({navigation}) {
   // const [showIGStory, setShowIGStory] = useState(false)
-  const { totalScore } = useContext(GameContext)
+  const { totalScore, setTotalScore, lol, setScore } = useContext(GameContext)
   // const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
   const [loaded] = useFonts({
@@ -24,8 +24,12 @@ export default function Congratulations({navigation}) {
     return null;
   }
 
-  const handleScore = () => {
-    calculateScore()
+  const handleBackHome = () => {
+    console.log("Total: ", lol)
+    setScore(0)
+    setTotalScore(0)        
+    navigation.navigate("Home")
+    
   }
 
   // const handleShare = async () => {
@@ -66,7 +70,7 @@ export default function Congratulations({navigation}) {
         <SharableComponent score={Math.round(totalScore)} />
       </View>
       <View style={styles.scoreButtonContainer}>
-        <TouchableOpacity style={styles.scoreButton} onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
           <Text style={styles.score}>Back Home</Text>
         </TouchableOpacity>
       </View>

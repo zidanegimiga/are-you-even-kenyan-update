@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import { Text, View, StyleSheet, Platform, Dimensions, TouchableOpacity } from 'react-native'
 import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native';
+import { GameContext } from '../global/OurRoadsContext';
 
 const { width, height } = Dimensions.get('screen');
 
 const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) => {
+    const [selectedId, setSelectedId] = useState('');
+    const {setScore, score, calculateScore } = useContext(GameContext)
+    const [backgroundColorA, setBackgroundColorA] = useState('white') 
+    const [backgroundColorB, setBackgroundColorB] = useState('white') 
+    
+    
     const [loaded] = useFonts({
         'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
     })
@@ -14,25 +21,55 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
     if (!loaded) {
         return null;
     }
+
+    function handleSelectionA (index, questions){
+        console.log("Selection: ", questions);
+        setSelectedId(questions?.a)
+        if(selectedId === questions.a){
+            setBackgroundColorA("#f9c2ff")
+        }
+        setBackgroundColorB("white")
+        console.log("Final: ", selectedId)       
+    }
+
+    function handleSelectionB (index, questions){
+        console.log("Selection: ", questions);
+        setSelectedId(questions?.b)
+        if(selectedId === questions.b){
+            setBackgroundColorB("#f9c2ff")
+        }
+        setBackgroundColorA("white")
+        setScore(score + 0.5)
+        console.log("Final: ", selectedId)
+        onPressB()       
+    }
+
+    function handleGameEnd (){
+        calculateScore(); 
+        navigation.navigate("Our Roads - Congratulations")
+    }
+
     return (
         <View style={styles.questionContainer}>
             <Text style={styles.question}>{questions.q}</Text>
             <View style={styles.optionsContainer}>
-                <TouchableOpacity style={styles.option}>
+
+                {/* TD: Create a reusable function for onPress */}
+                <TouchableOpacity style={[styles.option, {backgroundColor: backgroundColorA}]} onPress={()=> handleSelectionA(index, questions)} disabled={false}>
                     <Text style={styles.bigLetter}>A</Text>
                     <Text style={styles.optionText}>{questions.a}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.option} onPress={onPressB}>
+                <TouchableOpacity style={[styles.option, {backgroundColor: backgroundColorB}]} onPress={(questions)=>{handleSelectionB(index, questions)}}>
                     <Text style={styles.bigLetter}>B</Text>
                     <Text style={styles.optionText}>{questions.o}</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.buttonsContainer}>
-                {showSubmit && (
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Our Roads - Congratulations")}>
+                {/* {showSubmit && ( */}
+                    <TouchableOpacity style={styles.button} onPress={handleGameEnd}>
                         <Text style={styles.checkScore}> Check score {">>>"} </Text>
                     </TouchableOpacity>
-                )}
+                {/* )} */}
             </View>
         </View>
     )

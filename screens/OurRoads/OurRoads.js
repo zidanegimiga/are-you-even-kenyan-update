@@ -40,7 +40,6 @@ const OurRoads = () => {
     const contentOffset = event.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffset / event.nativeEvent.layoutMeasurement.width);
     setCurrentIndex(index);
-    console.log("Index: ", currentIndex)
   };
 
   const handleMomentumScrollEnd = () => {
@@ -51,24 +50,6 @@ const OurRoads = () => {
     calculateScore();
     navigation.navigate('/games/ourRoads/congratulations')
   }
-
-  const handleOnScroll = event => {
-    Animated.event(
-      [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-      { useNativeDriver: false },
-    )(event);
-  };
-
-  const onViewableItemsChanged = ({ viewableItems }) => {
-    if (viewableItems.length > 0) {
-      const { index } = viewableItems[0];
-      setCurrentIndex(index);
-    }
-  };
-
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50,
-  }).current;
 
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['70%', '90%']

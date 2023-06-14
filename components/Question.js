@@ -23,24 +23,20 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
     }
 
     function handleSelectionA (index, questions){
-        console.log("Selection: ", questions);
         setSelectedId(questions?.a)
         if(selectedId === questions.a){
             setBackgroundColorA("#f9c2ff")
         }
-        setBackgroundColorB("white")
-        console.log("Final: ", selectedId)       
+        setBackgroundColorB("white")      
     }
 
     function handleSelectionB (index, questions){
-        console.log("Selection: ", questions);
         setSelectedId(questions?.b)
         if(selectedId === questions.b){
             setBackgroundColorB("#f9c2ff")
         }
         setBackgroundColorA("white")
         setScore(score + 0.5)
-        console.log("Final: ", selectedId)
         onPressB()       
     }
 

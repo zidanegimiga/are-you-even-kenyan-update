@@ -10,6 +10,7 @@ import HomeNavigator from './navigations/Home';
 import Settings from './screens/Settings';
 import OurRoads from './navigations/OurRoads';
 import { GameProvider } from './global/OurRoadsContext';
+import Splash from './screens/Splash';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export default function App() {
         <StatusBar style="auto" />
         <Stack.Navigator>
           <Stack.Screen name="Initial" component={Initial} options={{ headerShown: false }} />
+          <Stack.Screen name="splash" component={Splash} options={{ headerShown: false }}/>
           <Stack.Screen name="Onboarding" component={OnboardingNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="Home" component={HomeNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />

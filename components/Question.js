@@ -61,11 +61,11 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
                 </TouchableOpacity>
             </View>
             <View style={styles.buttonsContainer}>
-                {/* {showSubmit && ( */}
+                {showSubmit && (
                     <TouchableOpacity style={styles.button} onPress={handleGameEnd}>
                         <Text style={styles.checkScore}> Check score {">>>"} </Text>
                     </TouchableOpacity>
-                {/* )} */}
+                 )}
             </View>
         </View>
     )

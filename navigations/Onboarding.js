@@ -6,7 +6,6 @@ import HomeNavigator from './Home';
 const Stack = createNativeStackNavigator();
 
 function OnboardingNavigator() {
-    console.log(Stack);
     return (
       <Stack.Navigator screenOptions={{}} >
         <Stack.Screen

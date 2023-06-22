@@ -13,7 +13,7 @@ export default function Initial({navigation}) {
 
   const getData = async () => {
     try {
-      const nickname = await AsyncStorage.getItem('@nickname')
+      const nickname = await AsyncStorage.getItem('@name')
       if(nickname !== null) {
         setNextRoute('Home')
       } else {

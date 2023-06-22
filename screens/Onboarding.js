@@ -7,7 +7,7 @@ import Avatar from '../components/Avatar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnboardingScreen = ({navigation}) => {
-  const [nickname, setNickname] = useState('');
+  const [name, setName] = useState('');
   const [loaded] = useFonts({
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
     'outfit-semibold': require('../assets/fonts/Outfit-SemiBold.ttf'),
@@ -17,11 +17,10 @@ const OnboardingScreen = ({navigation}) => {
     return null;
   }
 
-  const storeNickname = async (nickname) => {
+  const storeName = async (name) => {
     try {
-      await AsyncStorage.setItem('@nickname', nickname)
+      await AsyncStorage.setItem('@name', name)
     } catch (e) {
-      console.log(e)
     }
   }
 
@@ -83,7 +82,6 @@ const OnboardingScreen = ({navigation}) => {
   };
 
   const onNextStep = () => {
-    console.log('called next step');
   };
 
   const onPaymentStepComplete = () => {
@@ -91,11 +89,9 @@ const OnboardingScreen = ({navigation}) => {
   };
 
   const onPrevStep = () => {
-    console.log('called previous step');
   };
 
   const onSubmitSteps = () => {
-    console.log('called on submit step.');
     navigation.navigate('Home')
   };
 
@@ -106,10 +102,10 @@ const OnboardingScreen = ({navigation}) => {
           nextBtnText="Next >>>"
           nextBtnStyle={nextButtonStyle}
           nextBtnTextStyle={nextButtonTextStyle}
-          nextBtnDisabled={nickname.length <= 0}
-          onNext={()=>storeNickname(nickname)}
+          nextBtnDisabled={name.length <= 0}
+          onNext={()=>storeName(name)}
         >
-          <Nickname setNickname={setNickname} nickname={nickname} />
+          <Nickname setNickname={setName} name={name} />
         </ProgressStep>
         <ProgressStep
           onNext={onNextStep}

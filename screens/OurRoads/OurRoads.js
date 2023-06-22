@@ -35,11 +35,11 @@ const OurRoads = () => {
     const contentWidth = event.nativeEvent.contentSize.width - windowWidth;
     const scrollOffset = event.nativeEvent.contentOffset.x;
     const progress = scrollOffset / contentWidth;
-    setScrollProgress(progress);
 
     const contentOffset = event.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffset / event.nativeEvent.layoutMeasurement.width);
     setCurrentIndex(index);
+    setScrollProgress(progress);
   };
 
   const handleMomentumScrollEnd = () => {

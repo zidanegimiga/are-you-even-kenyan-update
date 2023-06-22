@@ -15,12 +15,21 @@ export default function Settings({ navigation }) {
 
   const getData = async () => {
     try {
-      const nick = await AsyncStorage.getItem('@nickname')
+      const nick = await AsyncStorage.getItem('@name')
       if(nickname !== null) {
-        setNickname('Hi '+nick)
+        setNickname('Hi '+ nick)
       }
     } catch(e) {
       // error reading value
+      setNickname('Settings')
+    }
+  }
+
+  const clearAllData = async () =>{
+    try{
+      await AsyncStorage.clear()
+      navigation.goBack()      
+    } catch(e){
     }
   }
 
@@ -56,6 +65,9 @@ export default function Settings({ navigation }) {
           value={soundEnabled}
         />
       </View>
+      <TouchableOpacity style={styles.resetButton} onPress={() => clearAllData()}>
+        <Text>Reset Everything</Text>
+      </TouchableOpacity>
 
     </View>
   );
@@ -102,5 +114,15 @@ const styles = StyleSheet.create({
   settingText: {
     fontFamily: 'outfit-medium',
     fontSize: 20
+  },
+  resetButton: {
+    backgroundColor: 'red',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 240,
+    height: 64,
+    position: "absolute",
+    
   }
 });

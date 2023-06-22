@@ -6,7 +6,6 @@ import Congratulations from '../screens/OurRoads/Congratulations';
 const Stack = createNativeStackNavigator();
 
 function OurRoadsNavigator() {
-    console.log(Stack);
     return (
       <Stack.Navigator screenOptions={{}} >
         <Stack.Screen

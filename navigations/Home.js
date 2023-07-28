@@ -59,6 +59,10 @@ function HomeNavigator() {
     );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    tabBarStyle: {
+        position: "absolute"
+    }
+})
 
 export default HomeNavigator;

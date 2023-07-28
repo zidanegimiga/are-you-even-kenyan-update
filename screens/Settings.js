@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image, Switch, Dimensions } from 'react-native';
 import Icon from '../components/Icon';
 import Sound from '../assets/icons/sound.svg'
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const deviceWidth = Dimensions.get('window').width
 
 export default function Settings({ navigation }) {
   const [soundEnabled, setSoundEnabled] = useState(false);
@@ -66,7 +68,7 @@ export default function Settings({ navigation }) {
         />
       </View>
       <TouchableOpacity style={styles.resetButton} onPress={() => clearAllData()}>
-        <Text>Reset Everything</Text>
+        <Text style={styles.resetButtonText}>Reset Everything</Text>
       </TouchableOpacity>
 
     </View>
@@ -120,9 +122,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    width: 240,
+    width: deviceWidth - 40,
     height: 64,
     position: "absolute",
-    
+    bottom: "5%",
+    // left: "50%",
+    // transform: "translate(50%)",
+    transform: [{ translateX: 20 }],
+    borderRadius: 8    
+  },
+  resetButtonText: {
+    color: "white",
+    // fontFamily: "Inter",
+    fontSize: 20,
+    fontWeight: "500"
   }
 });

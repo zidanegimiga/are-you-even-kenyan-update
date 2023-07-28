@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
@@ -20,7 +20,9 @@ const OnboardingScreen = ({navigation}) => {
   const storeName = async (name) => {
     try {
       await AsyncStorage.setItem('@name', name)
+      console.log("Stored: ", name)
     } catch (e) {
+      console.error(e)
     }
   }
 
@@ -96,32 +98,32 @@ const OnboardingScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ProgressSteps {...progressStepsStyle}>
-        <ProgressStep
-          nextBtnText="Next >>>"
-          nextBtnStyle={nextButtonStyle}
-          nextBtnTextStyle={nextButtonTextStyle}
-          nextBtnDisabled={name.length <= 0}
-          onNext={()=>storeName(name)}
-        >
-          <Nickname setNickname={setName} name={name} />
-        </ProgressStep>
-        <ProgressStep
-          onNext={onNextStep}
-          onPrevious={onPrevStep}
-          onSubmit={onSubmitSteps}
-          finishBtnText="Skip"
-          nextBtnStyle={submitButtonStyle}
-          nextBtnTextStyle={submitButtonTextStyle}
-          previousBtnText="Back"
-          previousBtnStyle={submitButtonStyle}
-          previousBtnTextStyle={submitButtonTextStyle}
-        >
-          <Avatar />
-        </ProgressStep>
-      </ProgressSteps>
-    </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <ProgressSteps {...progressStepsStyle}>
+          <ProgressStep
+            nextBtnText="Next >>>"
+            nextBtnStyle={nextButtonStyle}
+            nextBtnTextStyle={nextButtonTextStyle}
+            // nextBtnDisabled={name.length <= 0}
+            onNext={() => storeName(name)}
+          >
+            <Nickname setNickname={setName} name={name} />
+          </ProgressStep>
+          <ProgressStep
+            onNext={onNextStep}
+            onPrevious={onPrevStep}
+            onSubmit={onSubmitSteps}
+            finishBtnText="Skip"
+            nextBtnStyle={submitButtonStyle}
+            nextBtnTextStyle={submitButtonTextStyle}
+            previousBtnText="Back"
+            previousBtnStyle={submitButtonStyle}
+            previousBtnTextStyle={submitButtonTextStyle}
+          >
+            <Avatar/>
+          </ProgressStep>
+        </ProgressSteps>
+      </SafeAreaView>
   );
 };
 

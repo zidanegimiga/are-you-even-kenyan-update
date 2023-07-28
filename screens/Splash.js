@@ -8,7 +8,7 @@ const Splash = ({navigation}) => {
 
     setTimeout(()=>{
         navigation.navigate('Initial')
-    }, 5000)
+    }, 6000)
 
     return (
         <View style={styles.container}>

@@ -87,21 +87,6 @@ const OurRoads = () => {
           </View>
         </View>
         <View style={styles.flatlistContainer}>
-          {/* <FlatList
-            ref={flatListRef}
-            initialScrollIndex={0}
-            initialNumToRender={1}
-            data={data[0].qnA}
-            renderItem={({ item, index }) => <Question questions={item} showSubmit={submitButton} onPressB={() => showModal()} onPressA={() => setScore(score + 1)} index={index} />}
-            horizontal
-            pagingEnabled
-            snapToAlignment="center"
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleOnScroll}
-            onViewableItemsChanged={handleOnViewableItemsChanged}
-            onEndReached={() => showSubmitButton(true)}
-            keyExtractor={(item, index) => index.toString()}
-          /> */}
           <FlatList
             ref={flatListRef}
             snapToAlignment="center"
@@ -110,7 +95,7 @@ const OurRoads = () => {
             onEndReached={() => showSubmitButton(true)}
             showsHorizontalScrollIndicator={false}
             data={data[0].qnA}
-            renderItem={({ item, index }) => <Question questions={item} showSubmit={submitButton} onPressB={() => showModal()} onPressA={() => setScore(score + 1)} index={index} />}
+            renderItem={({ item, index }) => <Question questions={item} showSubmit={submitButton} onPressB={() => showModal()}  index={index} />}
             onScroll={handleScroll}
             keyExtractor={(item, index) => index.toString()}
             initialScrollIndex={0}

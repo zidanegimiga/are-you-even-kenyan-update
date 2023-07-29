@@ -1,20 +1,30 @@
 import React, { useState, useRef } from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, Button } from 'react-native';
 import { useFonts } from 'expo-font';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import Nickname from '../components/Nickname';
 import Avatar from '../components/Avatar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BottomSheetModal, BottomSheetModalProvider, useBottomSheet } from '@gorhom/bottom-sheet'
+import AvatarSelection from '../components/AvatarSelection';
+import {avatars} from '../global/avatarData';
 
 const OnboardingScreen = ({navigation}) => {
   const [name, setName] = useState('');
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [loaded] = useFonts({
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
     'outfit-semibold': require('../assets/fonts/Outfit-SemiBold.ttf'),
   });
 
-  if (!loaded) {
-    return null;
+  const onSelectAvatar = (avatar) => {
+    setSelectedAvatar(avatar);
+  };
+
+  const avatarModalRef = useRef(null);
+  
+  const showAvatar = () =>{
+    avatarModalRef.current?.present()
   }
 
   const storeName = async (name) => {
@@ -25,6 +35,18 @@ const OnboardingScreen = ({navigation}) => {
       console.error(e)
     }
   }
+
+  const storeAvatar = async () => {
+    try {
+      if (selectedAvatar) {
+        await AsyncStorage.setItem('@avatar', JSON.stringify(selectedAvatar));
+        avatarModalRef.current?.close()
+        // TD: Save avatar to user profile
+      }
+    } catch (error) {
+      console.error('Error saving avatar:', error);
+    }
+  };
 
   const progressStepsStyle = {
     activeStepIconBorderColor: '#A80C89',
@@ -86,18 +108,21 @@ const OnboardingScreen = ({navigation}) => {
   const onNextStep = () => {
   };
 
-  const onPaymentStepComplete = () => {
-    alert('Payment step completed!');
-  };
-
   const onPrevStep = () => {
   };
 
   const onSubmitSteps = () => {
-    navigation.navigate('Home')
+    navigation.navigate('Home');
   };
 
+  const snapPoints = ['70%', '90%'];
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
+    <BottomSheetModalProvider>
       <SafeAreaView style={styles.container}>
         <ProgressSteps {...progressStepsStyle}>
           <ProgressStep
@@ -113,17 +138,47 @@ const OnboardingScreen = ({navigation}) => {
             onNext={onNextStep}
             onPrevious={onPrevStep}
             onSubmit={onSubmitSteps}
-            finishBtnText="Skip"
+            finishBtnText="Next"
             nextBtnStyle={submitButtonStyle}
             nextBtnTextStyle={submitButtonTextStyle}
             previousBtnText="Back"
             previousBtnStyle={submitButtonStyle}
             previousBtnTextStyle={submitButtonTextStyle}
           >
-            <Avatar/>
+            <Avatar showAvatar={showAvatar} />
           </ProgressStep>
         </ProgressSteps>
       </SafeAreaView>
+      <BottomSheetModal
+        ref={avatarModalRef}
+        index={0}
+        snapPoints={snapPoints}
+        backgroundStyle={{
+          borderRadius: 24,
+          backgroundColor: "#5A3C96",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%"
+        }}
+        handleIndicatorStyle={{
+          backgroundColor: "white"
+        }}
+      >
+        {selectedAvatar && (
+          <View style={styles.preview}>
+            <Image style={styles.previewImage} source={require('../assets/avatars/man.png')} />
+            <Text style={styles.previewName}>{selectedAvatar.name}</Text>
+          </View>
+        )}
+        <AvatarSelection avatars={avatars} onSelectAvatar={onSelectAvatar} />
+        <View style={{width: "100%", justifyContent: "center", display: "flex", alignItems: "center"}}>
+          <TouchableOpacity onPress={storeAvatar} disabled={!selectedAvatar} style={styles.saveAvatarBtn}>
+            <Text style={{ color: "white" }}>Save Avatar</Text>
+          </TouchableOpacity>
+        </View>       
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   );
 };
 
@@ -132,6 +187,34 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F8FF81",
   },
+  preview: {
+    marginTop: 20,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  previewImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderColor: "white",
+    borderWidth: 2
+  },
+  previewName: {
+    marginTop: 10,
+    fontSize: 16,
+  },
+  saveAvatarBtn:{
+    width: "70%",
+    height: 40,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 16,
+    borderColor: "white",
+    borderWidth: 2,
+    borderRadius: 8
+    
+  }
 })
 
 export default OnboardingScreen;

@@ -1,12 +1,31 @@
 import { Image,StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useFonts } from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Avatar(){
+function Avatar({showAvatar}){
+  const [avatar, setAvatar] = useState(null)
   const [loaded] = useFonts({
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
     'outfit-semibold': require('../assets/fonts/Outfit-SemiBold.ttf'),
 });
+
+  const retrieveAvatar = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@avatar');
+      if (value !== null) {
+        // We have data!!
+        console.log(value);
+        setAvatar(value)
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  React.useEffect(()=> {
+    retrieveAvatar()    
+  }, [])
 
 if (!loaded) {
     return null;
@@ -17,13 +36,15 @@ if (!loaded) {
       <View style={styles.avatarContainer}>
         <View style={styles.imageContainer}>
           <Image 
-            source={require('../assets/images/userAvatar.png')}
+            source={
+              avatar === null ? require('../assets/images/userAvatar.png') : require('../assets/avatars/man.png')
+            }
             style={styles.avatar}
           />
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.selectAvatarButton}>
+        <TouchableOpacity style={styles.selectAvatarButton} onPress={()=> showAvatar()}>
           <Text style={styles.selectAvatarButtonText}>Select Avatar</Text>
         </TouchableOpacity>
       </View>      

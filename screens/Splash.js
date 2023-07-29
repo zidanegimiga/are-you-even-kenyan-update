@@ -6,13 +6,16 @@ const Splash = ({navigation}) => {
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
 
-    setTimeout(()=>{
-        navigation.navigate('Initial')
-    }, 6000)
+    const updatePlaybackCallback = (status) => {
+        if (status.didJustFinish) {
+            navigation.navigate('Initial');
+        }
+    }
 
     return (
         <View style={styles.container}>
             <Video
+                
                 ref={video}
                 style={styles.video}
                 source={
@@ -21,18 +24,10 @@ const Splash = ({navigation}) => {
                 }
                 useNativeControls={false}
                 resizeMode={ResizeMode.STRETCH}
-                isLooping
-                onPlaybackStatusUpdate={status => setStatus(() => status)}
+                // isLooping
+                onPlaybackStatusUpdate={updatePlaybackCallback}
                 onLoad={()=> video.current.playAsync()}
             />
-            {/* <View style={styles.buttons}>
-                <Button
-                    title={status.isPlaying ? 'Pause' : 'Play'}
-                    onPress={() =>
-                        status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
-                    }
-                />
-            </View> */}
         </View>
     )
 }

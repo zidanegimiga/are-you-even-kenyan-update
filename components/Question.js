@@ -3,59 +3,75 @@ import { Text, View, StyleSheet, Platform, Dimensions, TouchableOpacity } from '
 import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native';
 import { GameContext } from '../global/OurRoadsContext';
+import {Audio} from 'expo-av';
 
 const { width, height } = Dimensions.get('screen');
 
 const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) => {
+    const [sound, setSound] = useState();
+    const [ soundPath, setsoundPath ] = useState(''); 
     const [selectedId, setSelectedId] = useState('');
-    const {setScore, score, calculateScore } = useContext(GameContext)
-    const [backgroundColorA, setBackgroundColorA] = useState('white') 
-    const [backgroundColorB, setBackgroundColorB] = useState('white') 
+    const [selectedOption, setSelectedOption] = useState(null);
+    const {setScore, score, calculateScore } = useContext(GameContext);
+    const [backgroundColorA, setBackgroundColorA] = useState('white');
+    const [backgroundColorB, setBackgroundColorB] = useState('white');
     
-    
-    const [loaded] = useFonts({
-        'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
-    })
-    const navigation = useNavigation();
-
-    if (!loaded) {
-        return null;
+    const playWrongSound =  async () => {
+        const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
+        setSound(sound);
+        await sound.playAsync();
     }
 
+    const playCorrectSound =  async () => {
+        const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
+        setSound(sound);
+        await sound.playAsync();
+    }
+    
+    React.useEffect(()=> {
+        return sound ? () => {
+            sound.unloadAsync();
+        } : undefined;
+    }, [sound]);
+    
+    const [loaded] = useFonts({
+      'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
+    })
+
+    const navigation = useNavigation();
+
     function handleSelectionA (index, questions){
-        setSelectedId(questions?.a)
-        if(selectedId === questions.a){
-            setBackgroundColorA("#f9c2ff")
-        }
-        setBackgroundColorB("white")      
+        playWrongSound()
+        setSelectedOption('A')    
     }
 
     function handleSelectionB (index, questions){
-        setSelectedId(questions?.b)
-        if(selectedId === questions.b){
-            setBackgroundColorB("#f9c2ff")
-        }
-        setBackgroundColorA("white")
-        setScore(score + 0.5)
+        setSelectedOption('B')
+        setScore(score + 1)
         onPressB()       
+        playCorrectSound()
     }
 
     function handleGameEnd (){
-        calculateScore(); 
+        calculateScore() 
         navigation.navigate("Our Roads - Congratulations")
+    }
+
+    if (!loaded) {
+        return null;
     }
 
     return (
         <View style={styles.questionContainer}>
             <Text style={styles.question}>{questions.q}</Text>
             <View style={styles.optionsContainer}>
-
                 {/* TD: Create a reusable function for onPress */}
-                <TouchableOpacity style={[styles.option, {backgroundColor: backgroundColorA}]} onPress={()=> handleSelectionA(index, questions)} disabled={false}>
+                <TouchableOpacity style={[styles.option, selectedOption === 'A' ? styles.selectedButton : null]} onPress={()=> handleSelectionA(index, questions)} disabled={false}>
                     <Text style={styles.bigLetter}>A</Text>
                     <Text style={styles.optionText}>{questions.a}</Text>
+                    <Text style={styles.optionText}>{score}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.option, {backgroundColor: backgroundColorB}]} onPress={(questions)=>{handleSelectionB(index, questions)}}>
+                <TouchableOpacity style={[styles.option, selectedOption === 'B' ? styles.selectedButton : null]} onPress={(questions)=>{handleSelectionB(index, questions)}}>
                     <Text style={styles.bigLetter}>B</Text>
                     <Text style={styles.optionText}>{questions.o}</Text>
                 </TouchableOpacity>
@@ -119,6 +135,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center"
+    },
+    selectedButton: {
+        backgroundColor: "#D46FC0",
     },
     checkScore: {
         color: "#A80C89",

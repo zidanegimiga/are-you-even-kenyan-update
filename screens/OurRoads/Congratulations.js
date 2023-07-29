@@ -3,17 +3,17 @@ import { useFonts } from 'expo-font'
 import React, { useContext, useRef, useEffect, useState } from 'react'
 import { GameContext } from '../../global/OurRoadsContext'
 import SharableComponent from '../../components/SharableComponent'
-// import { Video } from 'expo-av';
-// import { captureRef } from 'react-native-view-shot';
-// import * as MediaLibrary from 'expo-media-library';
-// import { useRouter, Link } from 'expo-router'
-// import * as Sharing from 'expo-sharing';
+import { Video } from 'expo-av';
+import { captureRef } from 'react-native-view-shot';
+import * as MediaLibrary from 'expo-media-library';
+import { useRouter, Link } from 'expo-router'
+import * as Sharing from 'expo-sharing';
 
 
 export default function Congratulations({navigation}) {
-  // const [showIGStory, setShowIGStory] = useState(false)
+  const [showIGStory, setShowIGStory] = useState(false)
   const { totalScore, setTotalScore, setScore } = useContext(GameContext)
-  // const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
   const [loaded] = useFonts({
     'mutiara': require('../../assets/fonts/Mutiara_Display_02.ttf'),
@@ -27,41 +27,41 @@ export default function Congratulations({navigation}) {
   const handleBackHome = () => {
     setScore(0)
     setTotalScore(0)        
-    navigation.navigate("Home")
-    
+    navigation.navigate("Home")    
   }
 
-  // const handleShare = async () => {
-  //     try {
-  //         // Check for permissions
-  //         const permission  = await requestPermission()
-  //         const permissionToAccessMedia = permission.granted
-  //         const permissionToShare = await Sharing.isAvailableAsync()
+  const handleShare = async () => {
+      try {
+          const permission  = await requestPermission()
+          const permissionToAccessMedia = permission.granted
+          const permissionToShare = await Sharing.isAvailableAsync()
 
-  //         const imageURI = await captureRef(shareableCompRef, {
-  //             format: 'png',
-  //             quality: 0.8,
-  //         });
+          const imageURI = await captureRef(shareableCompRef, {
+              format: 'png',
+              quality: 0.8,
+          });
 
-  //         const asset = await MediaLibrary.createAssetAsync(imageURI);
+          const asset = await MediaLibrary.createAssetAsync(imageURI);
 
-  //         if(permissionToAccessMedia){
-  //             await MediaLibrary.createAlbumAsync('Expo', asset, false);                                
-  //         }else{
-  //             alert('You do not have permission to Access Media')
-  //         }
+          if(permissionToAccessMedia){
+              await MediaLibrary.createAlbumAsync('Expo', asset, false);                                
+          }else{
+              alert('You do not have permission to Access Media')
+          }
 
-  //         if(permissionToShare){
-  //             Sharing.shareAsync(asset.uri)
-  //         } else{
-  //             alert('You do not have permission to share')
-  //         }
+          if(permissionToShare){
+              Sharing.shareAsync(asset.uri)
+          } else{
+              alert('You do not have permission to share')
+          }
 
-  //         setShowIGStory(permissionToAccessMedia)
-  //     } catch (error) {
-  //         console.error('Error while sharing:', error);
-  //     }
-  // };
+          setShowIGStory(permissionToAccessMedia)
+      } catch (error) {
+          console.error('Error while sharing:', error);
+      }
+  };
+
+  useEffect(()=>{}, [])
 
   return (
     <SafeAreaView style={styles.pageContainer}>
@@ -69,6 +69,9 @@ export default function Congratulations({navigation}) {
         <SharableComponent score={Math.round(totalScore)} />
       </View>
       <View style={styles.scoreButtonContainer}>
+        <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+          <Text style={styles.shareText}>Share with your friends</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
           <Text style={styles.score}>Back Home</Text>
         </TouchableOpacity>
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    top: '95%'
+    top: '90%'
   },
   scoreButton: {
     backgroundColor: '#5A3C96',
@@ -109,9 +112,24 @@ const styles = StyleSheet.create({
     height: 48,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16
+  },
+  shareButton: {
+    backgroundColor: '#5A3C9600',
+    borderRadius: 8,
+    borderColor: '#5A3C96',
+    borderWidth: 2,
+    width: 240,
+    height: 48,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   score: {
     color: '#ffffff'
+  },
+  shareText: {
+    color: '#5A3C96'
   }
 })

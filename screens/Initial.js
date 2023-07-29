@@ -51,7 +51,7 @@ export default function Initial({navigation}) {
         </Text> */}
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(nextRoute)}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Onboarding")}>
           <Text style={styles.buttonText}>Let's See</Text>
         </TouchableOpacity>
       </View>

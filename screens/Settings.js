@@ -19,7 +19,7 @@ export default function Settings({ navigation }) {
     try {
       const nick = await AsyncStorage.getItem('@name')
       if(nickname !== null) {
-        setNickname('Hi '+ nick)
+        setNickname('Hi '+ nick);
       }
     } catch(e) {
       // error reading value

@@ -53,7 +53,7 @@ function HomeNavigator() {
             )}
         >
             <Tab.Screen name="SelectGame" component={SelectGame} />
-            <Tab.Screen name="Leaderboard" component={Leaderboard} />
+            {/* <Tab.Screen name="Leaderboard" component={Leaderboard} /> */}
             <Tab.Screen name="Information" component={Information} headerStyle={{}} />
         </Tab.Navigator>
     );

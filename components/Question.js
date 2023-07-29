@@ -69,7 +69,7 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
                 <TouchableOpacity style={[styles.option, selectedOption === 'A' ? styles.selectedButton : null]} onPress={()=> handleSelectionA(index, questions)} disabled={false}>
                     <Text style={styles.bigLetter}>A</Text>
                     <Text style={styles.optionText}>{questions.a}</Text>
-                    <Text style={styles.optionText}>{score}</Text>
+                    {/* <Text style={styles.optionText}>{score}</Text> */}
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.option, selectedOption === 'B' ? styles.selectedButton : null]} onPress={(questions)=>{handleSelectionB(index, questions)}}>
                     <Text style={styles.bigLetter}>B</Text>

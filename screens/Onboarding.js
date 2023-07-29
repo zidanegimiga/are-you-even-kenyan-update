@@ -129,7 +129,7 @@ const OnboardingScreen = ({navigation}) => {
             nextBtnText="Next >>>"
             nextBtnStyle={nextButtonStyle}
             nextBtnTextStyle={nextButtonTextStyle}
-            // nextBtnDisabled={name.length <= 0}
+            nextBtnDisabled={name.length <= 0}
             onNext={() => storeName(name)}
           >
             <Nickname setNickname={setName} name={name} />

@@ -6,15 +6,17 @@ import games from '../../global/games'
 import { useHeaderHeight } from '@react-navigation/elements';
 import Icon from '../../components/Icon'
 import { useFonts } from 'expo-font';
+import { Audio } from 'expo-av';
 
 const SelectGame = () => {
+  
   const headerHeight = useHeaderHeight();
   const [loaded] = useFonts({
     'outfit-regular': require('../../assets/fonts/Outfit-Regular.ttf'),
     'outfit-semibold': require('../../assets/fonts/Outfit-SemiBold.ttf'),
     'outfit-medium': require('../../assets/fonts/Outfit-Medium.ttf'),
 });
-
+  
 if (!loaded) {
     return null;
 }
@@ -23,7 +25,7 @@ if (!loaded) {
     <View style={[styles.wrapper, { marginTop: headerHeight }]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Select Game</Text>
-        <TouchableOpacity style={styles.closeIcon} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.closeIcon}>
           <Icon name="settings" />
         </TouchableOpacity>
       </View>

@@ -8,9 +8,11 @@ import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { useRouter, Link } from 'expo-router'
 import * as Sharing from 'expo-sharing';
+import { Audio } from 'expo-av';
 
 
 export default function Congratulations({navigation}) {
+  const [sound, setSound] = useState();
   const [showIGStory, setShowIGStory] = useState(false)
   const { totalScore, setTotalScore, setScore } = useContext(GameContext)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
@@ -20,48 +22,72 @@ export default function Congratulations({navigation}) {
   });
 
   const shareableCompRef = useRef()
-  if (!loaded) {
-    return null;
+
+  const playCheerSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_more_than_50%.mp3'));
+    setSound(sound);
+    await sound.playAsync();
+  }
+
+  const playJeerSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/less_than_50.mp3'));
+    setSound(sound);
+    await sound.playAsync();
   }
 
   const handleBackHome = () => {
     setScore(0)
-    setTotalScore(0)        
-    navigation.navigate("Home")    
+    setTotalScore(0)
+    navigation.navigate("Home")
   }
 
+  React.useEffect(() => {
+    setTimeout(()=>{
+      Math.round(totalScore) > 50 ? playCheerSound() : playJeerSound();
+      // playJeerSound()
+    }, 2000)
+  }, []);
+
+  React.useEffect(() => {
+    return sound ? () => {
+      sound.unloadAsync();
+    } : undefined;
+  }, [sound]);
+
   const handleShare = async () => {
-      try {
-          const permission  = await requestPermission()
-          const permissionToAccessMedia = permission.granted
-          const permissionToShare = await Sharing.isAvailableAsync()
+    try {
+      const permission = await requestPermission()
+      const permissionToAccessMedia = permission.granted
+      const permissionToShare = await Sharing.isAvailableAsync()
 
-          const imageURI = await captureRef(shareableCompRef, {
-              format: 'png',
-              quality: 0.8,
-          });
+      const imageURI = await captureRef(shareableCompRef, {
+        format: 'png',
+        quality: 0.8,
+      });
 
-          const asset = await MediaLibrary.createAssetAsync(imageURI);
+      const asset = await MediaLibrary.createAssetAsync(imageURI);
 
-          if(permissionToAccessMedia){
-              await MediaLibrary.createAlbumAsync('Expo', asset, false);                                
-          }else{
-              alert('You do not have permission to Access Media')
-          }
-
-          if(permissionToShare){
-              Sharing.shareAsync(asset.uri)
-          } else{
-              alert('You do not have permission to share')
-          }
-
-          setShowIGStory(permissionToAccessMedia)
-      } catch (error) {
-          console.error('Error while sharing:', error);
+      if (permissionToAccessMedia) {
+        await MediaLibrary.createAlbumAsync('Expo', asset, false);
+      } else {
+        alert('You do not have permission to Access Media')
       }
-  };
 
-  useEffect(()=>{}, [])
+      if (permissionToShare) {
+        Sharing.shareAsync(asset.uri)
+      } else {
+        alert('You do not have permission to share')
+      }
+
+      setShowIGStory(permissionToAccessMedia)
+    } catch (error) {
+      console.error('Error while sharing:', error);
+    }
+  };
+  
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.pageContainer}>

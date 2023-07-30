@@ -1,11 +1,14 @@
 {
   "expo": {
-    "name": "are-you-even-kenyan-update",
+    "name": "Are You Even Kenyan?",
     "slug": "are-you-even-kenyan-update",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "nativeVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

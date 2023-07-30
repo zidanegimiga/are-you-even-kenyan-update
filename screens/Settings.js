@@ -13,13 +13,16 @@ export default function Settings({ navigation }) {
   const [loaded] = useFonts({
     'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
   })
-  const [ nickname, setNickname ] = useState('Settings')
+  const [ nickname, setNickname ] = useState(null)
+  const [sound, setSound] = useState()
 
   const getData = async () => {
     try {
       const nick = await AsyncStorage.getItem('@name')
-      if(nickname !== null) {
+      if(nick !== null | undefined) {
         setNickname('Hi '+ nick);
+      } else {
+        setNickname('Settings')
       }
     } catch(e) {
       // error reading value
@@ -36,8 +39,24 @@ export default function Settings({ navigation }) {
   }
 
   useEffect(() => {
-    getData()
+    
   }, [])
+
+  useEffect(() => {
+    getData()
+  }, [nickname])
+
+  const playBtnClickSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/option.mp3'));
+    setSound(sound);
+    await sound.playAsync();
+  }
+
+  useEffect(() => {
+    return sound ? () => {
+      sound.unloadAsync();
+    } : undefined;
+  }, [sound]);
 
   if (!loaded) {
     return null;
@@ -50,9 +69,9 @@ export default function Settings({ navigation }) {
       <StatusBar style="auto" />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{nickname}</Text>
-        <TouchableOpacity style={styles.closeIcon} onPress={() => navigation.goBack()}>
+        <View style={styles.closeIcon}>
           <Icon name="close" color={"white"} />
-        </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.setting}>
         <View style={styles.sound}>

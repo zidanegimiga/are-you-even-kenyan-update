@@ -8,7 +8,7 @@ const data = [
             q: "You are driving a BMW X5 2022 edition. A Chapchap passes you fast. What do you do?",
             a: "Shake your head and continue listening to your music",
             o: "Accelerate and show them who is the king of the road",
-            t: null
+            t: "In Kenya, negligence accounted for the highest number of reported crashes at 33%"
         },
         {
             q: "A nduthi cuts you on the road. What will you do?",

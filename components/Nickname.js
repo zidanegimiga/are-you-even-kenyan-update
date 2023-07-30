@@ -38,7 +38,7 @@ function Nickname({setNickname, nickname}) {
                                 onPress={handleInputPress}
                                 placeholder='Name (A pseudo name works too!)'
                             />
-                            <Text style={styles.subtextB}> We only use your name for our leaderboards </Text>
+                            {/* <Text style={styles.subtextB}> We only use your name for our leaderboards </Text> */}
                         </View>
                     </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>

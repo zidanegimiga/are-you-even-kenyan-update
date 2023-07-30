@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image, Switch, Dimensions } from 'react-native';
 import Icon from '../components/Icon';
 import Sound from '../assets/icons/sound.svg'
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GameContext } from '../global/OurRoadsContext';
 
 const deviceWidth = Dimensions.get('window').width
 
 export default function Settings({ navigation }) {
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const {soundEnabled, setSoundEnabled} = useContext(GameContext);
   const [loaded] = useFonts({
     'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
   })
@@ -45,18 +46,6 @@ export default function Settings({ navigation }) {
   useEffect(() => {
     getData()
   }, [nickname])
-
-  const playBtnClickSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/option.mp3'));
-    setSound(sound);
-    await sound.playAsync();
-  }
-
-  useEffect(() => {
-    return sound ? () => {
-      sound.unloadAsync();
-    } : undefined;
-  }, [sound]);
 
   if (!loaded) {
     return null;

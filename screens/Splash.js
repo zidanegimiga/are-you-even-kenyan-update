@@ -11,10 +11,12 @@ const Splash = ({navigation}) => {
     const getData = async () => {
         try {
             const nick = await AsyncStorage.getItem('@name')
-            if (nickname !== null) {
-                setNickname('Hi ' + nick);
+            if (nick !== null) {
+                console.log("Name: ", nick)
+                setNickname(nick);
             } else {
-                setNickname('')
+                console.log("Name null: ", nick)
+                setNickname(null)
             }
         } catch (e) {
             // error reading value
@@ -27,11 +29,13 @@ const Splash = ({navigation}) => {
 
     const updatePlaybackCallback = (status) => {
         if (status.didJustFinish) {
-            if(nickname !== null){
-                navigation.navigate('Home');
-            } else{
-                navigation.navigate('Initial');
-            }
+            setTimeout(()=>{
+                if(nickname === null){
+                    navigation.navigate('Initial')
+                } else{
+                    navigation.navigate('Home')
+                }
+            }, 3000)
         }
     }
 

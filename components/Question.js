@@ -12,7 +12,7 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
     const [ soundPath, setsoundPath ] = useState(''); 
     const [selectedId, setSelectedId] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
-    const {setScore, score, calculateScore } = useContext(GameContext);
+    const { setScore, score, calculateScore, soundEnabled, setSoundEnabled } = useContext(GameContext);
     const [backgroundColorA, setBackgroundColorA] = useState('white');
     const [backgroundColorB, setBackgroundColorB] = useState('white');
     
@@ -41,15 +41,21 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
     const navigation = useNavigation();
 
     function handleSelectionA (index, questions){
-        playWrongSound()
-        setSelectedOption('A')    
+        if(soundEnabled){
+            playWrongSound()
+            setSelectedOption('A') 
+        } else{
+            setSelectedOption('A') 
+        }  
     }
 
     function handleSelectionB (index, questions){
         setSelectedOption('B')
         setScore(score + 1)
         onPressB()       
-        playCorrectSound()
+        if(soundEnabled){
+            playCorrectSound()
+        }
     }
 
     function handleGameEnd (){

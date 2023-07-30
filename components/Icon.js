@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useState} from 'react'
+import React, { useState, useContext } from 'react'
 import { SvgXml } from 'react-native-svg';
 import Home from '../assets/icons/home.svg'
 import Leaderboard from '../assets/icons/leaderboard.svg'
@@ -10,6 +10,7 @@ import Close from '../assets/icons/close.svg'
 import Sound from '../assets/icons/sound.svg'
 import { useNavigation } from '@react-navigation/native';
 import { Audio } from 'expo-av';
+import { GameContext } from '../global/OurRoadsContext';
 
 const Icon = ({ name, size, color }) => {
     const [sound, setSound] = useState()
@@ -18,6 +19,7 @@ const Icon = ({ name, size, color }) => {
         setSound(sound);
         await sound.playAsync();
     }
+    const { soundEnabled, setSoundEnabled } = useContext(GameContext);
 
     React.useEffect(() => {
         return sound ? () => {
@@ -28,13 +30,21 @@ const Icon = ({ name, size, color }) => {
     const navigation = useNavigation();
 
     const goToInformationScreen = () => {
-        playBtnClickSound()
-        navigation.navigate('Settings');       
+        if(soundEnabled){
+            playBtnClickSound()
+            navigation.navigate('Settings'); 
+        } else{
+            navigation.navigate('Settings'); 
+        }    
     };
 
     const goToHomeScreen = () => {
-        playBtnClickSound()
-        navigation.navigate('SelectGame');       
+        if(soundEnabled){
+            playBtnClickSound()
+            navigation.navigate('SelectGame');
+        }  else{
+            navigation.navigate('SelectGame');
+        }      
     };
 
     if (name === "home") {

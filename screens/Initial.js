@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
+    zIndex: 3
   },
 
   buttonText: {

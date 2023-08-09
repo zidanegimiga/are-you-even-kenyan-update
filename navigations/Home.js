@@ -61,7 +61,12 @@ function HomeNavigator() {
 
 const styles = StyleSheet.create({
     tabBarStyle: {
-        position: "absolute"
+        position: "absolute",
+        bottom: "20%",
+        height: 80,
+        borderRadius: 20,
+        width: "90%",
+        left: "5%"
     }
 })
 

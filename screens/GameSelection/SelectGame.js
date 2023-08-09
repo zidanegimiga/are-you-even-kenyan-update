@@ -31,6 +31,7 @@ if (!loaded) {
       </View>
       <Swiper
         containerStyle={{
+          backgroundColor: "white"
         }}
         // autoplay={true} 
         showsButtons={true}

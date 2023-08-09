@@ -7,9 +7,10 @@
       "node": "18.15.0"
     },
     "development": {
-      "extends": "production",
-      "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
       "distribution": "internal"

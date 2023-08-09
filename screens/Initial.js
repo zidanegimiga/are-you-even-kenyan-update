@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   },
   image:{
     position: 'absolute',
-    bottom: -15,
+    bottom: -50,
   }
 });

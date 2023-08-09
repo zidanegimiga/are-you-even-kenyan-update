@@ -11,11 +11,13 @@ import * as Sharing from 'expo-sharing';
 import { Audio } from 'expo-av';
 
 
-export default function Congratulations({navigation}) {
+export default function Congratulations(route, navigation) {
   const [sound, setSound] = useState();
   const [showIGStory, setShowIGStory] = useState(false)
   const { totalScore, setTotalScore, setScore } = useContext(GameContext)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+
+  const { totalsss } = route.params;
 
   const [loaded] = useFonts({
     'mutiara': require('../../assets/fonts/Mutiara_Display_02.ttf'),
@@ -92,7 +94,7 @@ export default function Congratulations({navigation}) {
   return (
     <SafeAreaView style={styles.pageContainer}>
       <View ref={shareableCompRef}>
-        <SharableComponent score={Math.round(totalScore)} />
+        {/* <SharableComponent score={Math.round(totals)} /> */}
       </View>
       <View style={styles.scoreButtonContainer}>
         {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>

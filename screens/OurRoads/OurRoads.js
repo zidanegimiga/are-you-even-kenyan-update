@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Platform, Dimension, Animated, SafeAreaView, FlatList, Image, Dimensions } from 'react-native'
 import Icon from '../../components/Icon'
-import React, { useState, useContext, useRef } from 'react'
+import React, { useState, useContext, useRef, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Swiper from 'react-native-swiper'
 import { GameContext } from '../../global/OurRoadsContext'
@@ -22,6 +22,8 @@ const Footer = () => {
 }
 
 const OurRoads = () => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState(Array(data[0].qnA.length).fill(null));
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0)
   const [submitButton, showSubmitButton] = useState(false)
@@ -66,6 +68,45 @@ const OurRoads = () => {
     'outfit-regular': require('../../assets/fonts/Outfit-Regular.ttf'),
   })
 
+  const handleAnswerSelect = (selectedOption) => {
+    const updatedAnswers = [...userAnswers];
+    updatedAnswers[currentQuestionIndex] = selectedOption;
+    setUserAnswers(updatedAnswers);
+    moveToNextQuestion();
+  };
+
+  const moveToNextQuestion = () => {
+    if (currentQuestionIndex < data[0].qnA.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      // All questions answered, calculate score and navigate to CongratulationsScreen
+      const totalsss = generateScore();
+      // navigation.navigate('Our Roads - Congratulations', { totalsss });
+    }
+  };
+
+  const generateScore = () => {
+    let s = 0;
+    data[0].qnA.forEach((question, index) => {
+      if (userAnswers[index] === question.answer) {
+        s++;
+        console.log("Correct: ", s)
+      }
+    });
+    return s;
+  };
+
+  const currentQuestion = data[0].qnA[currentQuestionIndex];
+
+  useEffect(()=> {
+    console.log("Data: ", currentQuestion.tip)
+    console.log("Answers: ", userAnswers)
+  }, [])
+
+  function handleExample(ii){
+    console.log("III: ", ii)
+  }
+
   if (!loaded) {
     return null;
   }
@@ -87,7 +128,7 @@ const OurRoads = () => {
           </View>
         </View>
         <View style={styles.flatlistContainer}>
-          <FlatList
+          {/* <FlatList
             ref={flatListRef}
             snapToAlignment="center"
             horizontal
@@ -100,7 +141,8 @@ const OurRoads = () => {
             keyExtractor={(item, index) => index.toString()}
             initialScrollIndex={0}
             onMomentumScrollEnd={handleMomentumScrollEnd}
-          />
+          /> */}
+          <Question questions={currentQuestion} showSubmit={submitButton} onPressB={handleAnswerSelect} />
         </View>
         <Footer />
       </SafeAreaView>
@@ -117,7 +159,7 @@ const OurRoads = () => {
           <View style={styles.modalContentContainer}>
             <Text style={styles.didYouKnowTitle}>Did you know?</Text>
             <Text style={styles.didYouKnowText}>
-              {data[0].qnA[currentIndex].t}
+              {currentQuestion.tip}
             </Text>
           </View>
         </ImageBackground>

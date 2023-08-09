@@ -69,18 +69,20 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
 
     return (
         <View style={styles.questionContainer}>
-            <Text style={styles.question}>{questions.q}</Text>
+            <Text style={styles.question}>{questions.question}</Text>
             <View style={styles.optionsContainer}>
-                {/* TD: Create a reusable function for onPress */}
-                <TouchableOpacity style={[styles.option, selectedOption === 'A' ? styles.selectedButton : null]} onPress={()=> handleSelectionA(index, questions)} disabled={false}>
-                    <Text style={styles.bigLetter}>A</Text>
-                    <Text style={styles.optionText}>{questions.a}</Text>
-                    {/* <Text style={styles.optionText}>{score}</Text> */}
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.option, selectedOption === 'B' ? styles.selectedButton : null]} onPress={(questions)=>{handleSelectionB(index, questions)}}>
-                    <Text style={styles.bigLetter}>B</Text>
-                    <Text style={styles.optionText}>{questions.o}</Text>
-                </TouchableOpacity>
+                {
+                    questions.options.map((o, i) =>{
+                        return(
+                            <TouchableOpacity style={[styles.option, 
+                            // selectedOption === 'B' ? styles.selectedButton : null
+                            ]} onPress={() => { onPressB(o) }} key={i}>
+                                <Text style={styles.bigLetter}>{}</Text>
+                                <Text style={styles.optionText}>{o}</Text>
+                            </TouchableOpacity>
+                        )
+                    })
+                }
             </View>
             <View style={styles.buttonsContainer}>
                 {showSubmit && (

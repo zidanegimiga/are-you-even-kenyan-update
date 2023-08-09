@@ -9,12 +9,7 @@ const { width, height } = Dimensions.get('screen');
 
 const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) => {
     const [sound, setSound] = useState();
-    const [ soundPath, setsoundPath ] = useState(''); 
-    const [selectedId, setSelectedId] = useState('');
-    const [selectedOption, setSelectedOption] = useState(null);
     const { setScore, score, calculateScore, soundEnabled, setSoundEnabled } = useContext(GameContext);
-    const [backgroundColorA, setBackgroundColorA] = useState('white');
-    const [backgroundColorB, setBackgroundColorB] = useState('white');
     
     const playWrongSound =  async () => {
         const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/Our_Roads_Correct_Answer.mp3'));

@@ -11,13 +11,11 @@ import * as Sharing from 'expo-sharing';
 import { Audio } from 'expo-av';
 
 
-export default function Congratulations(route, navigation) {
+export default function Congratulations({navigation}) {
   const [sound, setSound] = useState();
   const [showIGStory, setShowIGStory] = useState(false)
-  const { totalScore, setTotalScore, setScore } = useContext(GameContext)
+  const { totalScore, setTotalScore, setScore, score } = useContext(GameContext)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-
-  const { totalsss } = route.params;
 
   const [loaded] = useFonts({
     'mutiara': require('../../assets/fonts/Mutiara_Display_02.ttf'),
@@ -39,15 +37,16 @@ export default function Congratulations(route, navigation) {
 
   const handleBackHome = () => {
     setScore(0)
-    setTotalScore(0)
+    // setTotalScore(0)
     navigation.navigate("Home")
+    console.log("Back home")
   }
 
   React.useEffect(() => {
     setTimeout(()=>{
-      Math.round(totalScore) > 50 ? playCheerSound() : playJeerSound();
+      score >= 50 ? playCheerSound() : playJeerSound();
       // playJeerSound()
-    }, 2000)
+    }, 1000)
   }, []);
 
   React.useEffect(() => {
@@ -94,7 +93,7 @@ export default function Congratulations(route, navigation) {
   return (
     <SafeAreaView style={styles.pageContainer}>
       <View ref={shareableCompRef}>
-        {/* <SharableComponent score={Math.round(totals)} /> */}
+        <SharableComponent score={Math.round(score)} />
       </View>
       <View style={styles.scoreButtonContainer}>
         {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>

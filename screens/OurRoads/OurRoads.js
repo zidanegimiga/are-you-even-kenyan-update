@@ -10,6 +10,8 @@ import Nairobi from '../../assets/icons/nairobi.svg'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useFonts } from 'expo-font'
 import { Switch } from 'react-native'
+import ProgressBar from '../../components/ProgressBar'
+import { Audio } from 'expo-av';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -27,26 +29,22 @@ const OurRoads = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0)
   const [submitButton, showSubmitButton] = useState(false)
+  const [sound, setSound] = useState();
 
-  const { score, setScore, totalScore, calculateScore } = useContext(GameContext);
+  const { score, setScore, totalScore, calculateScore, setSoundEnabled, soundEnabled } = useContext(GameContext);
   const navigation = useNavigation();
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const flatListRef = useRef(null);
 
-  const handleScroll = (event) => {
-    const contentWidth = event.nativeEvent.contentSize.width - windowWidth;
-    const scrollOffset = event.nativeEvent.contentOffset.x;
-    const progress = scrollOffset / contentWidth;
+  const playCorrectSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
+    setSound(sound);
+    await sound.playAsync();
+  }
 
-    const contentOffset = event.nativeEvent.contentOffset.x;
-    const index = Math.round(contentOffset / event.nativeEvent.layoutMeasurement.width);
-    setCurrentIndex(index);
-    setScrollProgress(progress);
-  };
-
-  const handleMomentumScrollEnd = () => {
-    flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
-  };
+  const playWrongSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
+    setSound(sound);
+    await sound.playAsync();
+  }
 
   const triggerGameEnd = () => {
     calculateScore();
@@ -60,6 +58,11 @@ const OurRoads = () => {
     bottomSheetModalRef.current?.present()
   }
 
+  function handleBottomSheetDismissal(){
+    setCurrentQuestionIndex(currentQuestionIndex + 1)
+    
+  }
+
   const windowWidth = Dimensions.get('window').width;
 
   const [loaded] = useFonts({
@@ -69,19 +72,47 @@ const OurRoads = () => {
   })
 
   const handleAnswerSelect = (selectedOption) => {
+    const isCorrect = selectedOption === data[0].qnA[currentQuestionIndex].answer;
     const updatedAnswers = [...userAnswers];
     updatedAnswers[currentQuestionIndex] = selectedOption;
     setUserAnswers(updatedAnswers);
-    moveToNextQuestion();
+    console.log("Selected: ", selectedOption)
+    console.log("Index: ", currentQuestionIndex)
+    console.log("Answer: ", data[0].qnA[currentQuestionIndex].answer)
+
+    if (!isCorrect) {
+      if(soundEnabled){playWrongSound()}
+      
+      if (currentQuestionIndex === data[0].qnA.length - 1) {
+        const s = generateScore();
+        console.log("SCROE: ", s);
+        setScore(s)
+        navigation.navigate('Our Roads - Congratulations');
+      } else {
+        showModal();
+      }
+    } else {
+      if (soundEnabled) { playCorrectSound(); }
+      if (currentQuestionIndex === data[0].qnA.length - 1) {
+        const s = generateScore();
+        console.log("SCROE: ", s);
+        setScore(s)
+        navigation.navigate('Our Roads - Congratulations');
+      } else{
+        moveToNextQuestion();
+      }
+    }
   };
 
   const moveToNextQuestion = () => {
+    console.log("Current Index: ", currentQuestionIndex)
     if (currentQuestionIndex < data[0].qnA.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       // All questions answered, calculate score and navigate to CongratulationsScreen
-      const totalsss = generateScore();
-      // navigation.navigate('Our Roads - Congratulations', { totalsss });
+      const s = generateScore();
+      console.log("Total: ", s)
+      // navigation.navigate('Our Roads - Congratulations', { s });
     }
   };
 
@@ -90,22 +121,21 @@ const OurRoads = () => {
     data[0].qnA.forEach((question, index) => {
       if (userAnswers[index] === question.answer) {
         s++;
-        console.log("Correct: ", s)
       }
     });
-    return s;
+    const total = s/data[0].qnA.length * 100
+    return 100 - total;
   };
+
+  const progress = (currentQuestionIndex / data[0].qnA.length) * 100;
 
   const currentQuestion = data[0].qnA[currentQuestionIndex];
 
-  useEffect(()=> {
-    console.log("Data: ", currentQuestion.tip)
-    console.log("Answers: ", userAnswers)
-  }, [])
-
-  function handleExample(ii){
-    console.log("III: ", ii)
-  }
+  useEffect(() => {
+    return sound ? () => {
+      sound.unloadAsync();
+    } : undefined;
+  }, [sound]);
 
   if (!loaded) {
     return null;
@@ -123,25 +153,9 @@ const OurRoads = () => {
           </View>
         </View>
         <View style={styles.progressContainerWrapper}>
-          <View style={styles.progressContainer}>
-            <View style={[styles.progress, { width: `${scrollProgress * 100}%` }]}></View>
-          </View>
+          <ProgressBar progress={progress}/>
         </View>
         <View style={styles.flatlistContainer}>
-          {/* <FlatList
-            ref={flatListRef}
-            snapToAlignment="center"
-            horizontal
-            pagingEnabled
-            onEndReached={() => showSubmitButton(true)}
-            showsHorizontalScrollIndicator={false}
-            data={data[0].qnA}
-            renderItem={({ item, index }) => <Question questions={item} showSubmit={submitButton} onPressB={() => showModal()}  index={index} />}
-            onScroll={handleScroll}
-            keyExtractor={(item, index) => index.toString()}
-            initialScrollIndex={0}
-            onMomentumScrollEnd={handleMomentumScrollEnd}
-          /> */}
           <Question questions={currentQuestion} showSubmit={submitButton} onPressB={handleAnswerSelect} />
         </View>
         <Footer />
@@ -154,14 +168,21 @@ const OurRoads = () => {
           borderRadius: 24,
           backgroundColor: "#5A3C96"
         }}
+        onDismiss={handleBottomSheetDismissal}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{
+          backgroundColor: "white",
+        }}
       >
         <ImageBackground source={require('../../assets/icons/modalBG.png')} resizeMode='cover' style={styles.modalBG}>
-          <View style={styles.modalContentContainer}>
-            <Text style={styles.didYouKnowTitle}>Did you know?</Text>
-            <Text style={styles.didYouKnowText}>
-              {currentQuestion.tip}
-            </Text>
-          </View>
+          <TouchableOpacity onPress={() => bottomSheetModalRef.current?.dismiss()} style={styles.modalContentContainer}>
+            <View>
+              <Text style={styles.didYouKnowTitle}>Did you know?</Text>
+              <Text style={styles.didYouKnowText}>
+                {currentQuestion.tip}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </ImageBackground>
       </BottomSheetModal>
     </BottomSheetModalProvider>

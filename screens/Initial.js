@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     width: '100%',
-    marginTop: 48,
+    marginTop: 16,
     flexDirection: "row",
     // justifyContent: "center",
     // alignItems: "center"
@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   },
   image:{
     position: 'absolute',
-    bottom: 0,
+    bottom: -15,
   }
 });

@@ -22,7 +22,7 @@ import * as MediaLibrary from 'expo-media-library';
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
 // const colors = ["#deb7ff", "#c785ec", "#a86add", "#8549a7", "#634087"];
 
-const NUM_OF_CONFETTI = 200;
+const NUM_OF_CONFETTI = 400;
 
 const { height, width } = Dimensions.get("window");
 const windowHeight = Dimensions.get('window').height;
@@ -246,9 +246,9 @@ export const Congratulations = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.scoreButtonContainer}>
-                <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+                {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                     <Text style={styles.shareText}>Share with your friends</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
                     <Text style={styles.score}>Back Home</Text>
                 </TouchableOpacity>

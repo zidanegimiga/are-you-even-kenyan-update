@@ -88,12 +88,13 @@ const ConfettiPiece = ({
     );
 };
 
-export const Congratulations = ({navigation}) => {
+export const Congratulations = ({ navigation }) => {
     const [sound, setSound] = useState();
     const [confettiPieces, setConfettiPieces] = useState([]);
     const { totalScore, setTotalScore, setScore, score } = useContext(GameContext)
-    const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
-    const fade = useSharedValue(0)
+    const translateY = useSharedValue(windowHeight);
+    const buttonFade = useSharedValue(0);
+    const fade = useSharedValue(0);
 
     const animate = () => {
         fade.value = withDelay(
@@ -107,7 +108,6 @@ export const Congratulations = ({navigation}) => {
             2000,
             withSpring(-100, { damping: 5, stiffness: 20 }) // Animate to the top of the screen
         );
-
     }, []);
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -149,7 +149,7 @@ export const Congratulations = ({navigation}) => {
 
     React.useEffect(() => {
         setTimeout(() => {
-            score >= 50 ? playCheerSound() : playJeerSound();
+            score >= 50 ? playJeerSound() : playCheerSound();
             // animation()
             // playJeerSound()
         }, 1000)
@@ -230,17 +230,32 @@ export const Congratulations = ({navigation}) => {
     };
 
     useEffect(() => {
-        setTimeout(startAnimation, 2500)
+        // setTimeout(startAnimation, 2500)
         setTimeout(animate, 1500)
     }, [])
 
     return (
         <View style={styles.pageContainer}>
             <View>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Haiya!</Animated.Text>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Tuseme</Animated.Text>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>You're</Animated.Text>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Kenyan?</Animated.Text>
+                {
+                    score < 50 ? (
+                        <View>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>HAIYA!</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>TUSEME</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>WE HAVE</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>GOOD</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>KENYAN</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>DRIVERS?</Animated.Text>
+                        </View>
+                    ) : (
+                        <View>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Haiya!</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Tuseme</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>You're</Animated.Text>
+                            <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Kenyan?</Animated.Text>
+                        </View>
+                    )
+                }
                 <View>
                     <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>{score}%</Animated.Text>
                 </View>
@@ -249,9 +264,11 @@ export const Congratulations = ({navigation}) => {
                 {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                     <Text style={styles.shareText}>Share with your friends</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
-                    <Text style={styles.score}>Back Home</Text>
-                </TouchableOpacity>
+                <Animated.View style={[styles.scoreButton, animatedText]}>
+                    <TouchableOpacity onPress={handleBackHome}>
+                        <Text style={styles.score}>Back Home</Text>
+                    </TouchableOpacity>
+                </Animated.View>
             </View>
             <Canvas style={styles.container}>
                 {confettiPieces.map((offset) => (
@@ -277,12 +294,23 @@ export const Congratulations = ({navigation}) => {
                 }}
                 style={[styles.shocked, animatedStyle]}
             >
-                <Image
-                    source={require('../../assets/images/shocked.png')}
-                    style={{
-                        width: "100%"
-                    }}
-                />
+                {
+                    score > 50 ? (
+                        <Image
+                            source={require(`../../assets/images/shocked.png`)}
+                            style={{
+                                width: "100%"
+                            }}
+                        />
+                    ) : (
+                        <Image
+                            source={require(`../../assets/images/shockedLessThan50.png`)}
+                            style={{
+                                width: "100%"
+                            }}
+                        />
+                    )
+                }
             </Animated.View>
         </View>
     );
@@ -302,7 +330,7 @@ const styles = StyleSheet.create({
         left: 0
     },
     text: {
-        fontSize: 32,
+        fontSize: 40,
         textAlign: "center"
     },
     header: {

@@ -4,18 +4,18 @@ const data = [
       body: "Ut tincidunt tincidunt erat. Sed cursus turpis vitae tortor. Quisque malesuada placerat nisl. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.",
       imgUrl: "https://picsum.photos/id/11/200/300",
       qnA: [
-        {
-            question: "You are driving a BMW X5 2022 edition. A Chapchap passes you fast. What do you do?",
-            answer: "Shake your head and continue listening to your music",
-            options: ["Accelerate and show them who is the king of the road", "Shake your head and continue listening to your music"],
-            tip: "In Kenya, negligence accounted for the highest number of reported crashes at 33%"
-        },
-        {
-            question: "A nduthi cuts you on the road. What will you do?",
-            answer: "Quietly be disgruntled by the Nduthi guy's lack of road safety and etiquette",
-            options: ["Let the road rage burn. Chase him, Open your window and shout at him", "Quietly be disgruntled by the Nduthi guy's lack of road safety and etiquette"],
-            tip: "In Kenya, negligence accounted for the highest number of reported crashes at 33%"
-        },
+        // {
+        //     question: "You are driving a BMW X5 2022 edition. A Chapchap passes you fast. What do you do?",
+        //     answer: "Shake your head and continue listening to your music",
+        //     options: ["Accelerate and show them who is the king of the road", "Shake your head and continue listening to your music"],
+        //     tip: "In Kenya, negligence accounted for the highest number of reported crashes at 33%"
+        // },
+        // {
+        //     question: "A nduthi cuts you on the road. What will you do?",
+        //     answer: "Quietly be disgruntled by the Nduthi guy's lack of road safety and etiquette",
+        //     options: ["Let the road rage burn. Chase him, Open your window and shout at him", "Quietly be disgruntled by the Nduthi guy's lack of road safety and etiquette"],
+        //     tip: "In Kenya, negligence accounted for the highest number of reported crashes at 33%"
+        // },
         // {
         //     question: "You are a pedestrian, You need to catch a matatu on the other side of the road before it leaves you because if it does you will have to wait for a while to get the next one. What do you do",
         //     answer: "Wait for oncoming traffic to ease after all the matatus are plenty ",
@@ -130,36 +130,36 @@ const data = [
         //     options: ["Give him 1k and ask him to let you go", "Twende mbele, you agree to follow the law"],
         //     tip: "Failure to carry your insurance certificates with you could result to a fine of up to 100,00 or sevral months jail term."
         // },
-        // {
-        //     question: "Chrisi Imeshika! Ni masaa yakuenda ushago sasa.  You have already made a trip to and from Nakuru; your friend tells you he has passengers who want to go to Kisumu. You have already surpassed the maximum driving hours, what will you do.",
-        //     answer: "Politely decline, and let him know you are fatigued",
-        //     options: ["Politely decline, and let him know you are fatigued", "Take up the offer and drive to Kisumu, you'll open the window to keep sleep away and have an extra stop to rest"],
-        //     tip: "Driving for more than 8 hours within 24 hours will make you eligible to a fine not exceeding fifty thousand shillings, or to imprisonment for a term not exceeding twelve months"
-        // },
-        // {
-        //     question: "ugh! I hate that parking spot. My car will be under the sun the entire time I'm at the mall; sasa who's coming back to an over heated car.  Oh wait is that a sweet spot on the parking for people with disabilities? So…",
-        //     answer: "Just park under the sun, and leave my windows slightly open",
-        //     options: ["Just park under the sun, and leave my windows slightly open", "Park on the persons with disability spot and rush into the mall before the guard sees me."],
-        //     tip: "Failure to adhere to the parking rules of a particular parking bay could result to a fine of up to ksh10,00 or imprisonment for a term not exceeding 3 months."
-        // },
-        // {
-        //     question: "You don’t really remember what happened, all you know is there was a big thud and that it was a human being you knocked down. They aren't dead you can see them moving.People are starting to approach, you are afraid, your passenger princess urges to drive off, what will you do?",
-        //     answer: "stop the car, call the police and try help the person you hit",
-        //     options: ["Drive off, I'm not about to have angry people destroy my car and steal from me. I'll go to the nearest police station", "stop the car, call the police and try help the person you hit"],
-        //     tip: "Driving off from an accident scene without reporting could lead to a penalty of 5,000 or jail term of not more than three months."
-        // },
-        // {
-        //     question: "Apparently Njeri is tired and wants a lift on my bicycle, but my small brother, Mike and I had plans to ride together. Sasa ni nani nitatoka tu roho safi",
-        //     answer: "Tell Njeri Mike and I had plans already",
-        //     options: ["Have them both ride on my bicycle, ata Mike is Tiny", "Tell Njeri Mike and I had plans already"],
-        //     tip: "As a cyclist carrying more than one person is considered an offence. Failure to adhere to this rule you will be liable for a fine of ksh. 500"
-        // },
-        // {
-        //     question: "Aki Imagine I don't have bus fare. And the way nimekopa kilamtu no one will want to loan me cash. But si I can just help these touts call customers once I get 40 bob niko sawa,ama?",
-        //     answer: "Just ask for more money from my friends, hopefully get tomorrows fare as well",
-        //     options: ["Help 5 touts fill the mathree and drop off that way I'll have fare for tomorrow as well, akili mtu wangu", "Just ask for more money from my friends, hopefully get tomorrows fare as well"],
-        //     tip: "Touting when you aren't authorized or lincensed is considered an offence. Failure to adhere to this rule, you will be liable for a fine of ksh.1000"
-        // }
+        {
+            question: "Chrisi Imeshika! Ni masaa yakuenda ushago sasa.  You have already made a trip to and from Nakuru; your friend tells you he has passengers who want to go to Kisumu. You have already surpassed the maximum driving hours, what will you do.",
+            answer: "Politely decline, and let him know you are fatigued",
+            options: ["Politely decline, and let him know you are fatigued", "Take up the offer and drive to Kisumu, you'll open the window to keep sleep away and have an extra stop to rest"],
+            tip: "Driving for more than 8 hours within 24 hours will make you eligible to a fine not exceeding fifty thousand shillings, or to imprisonment for a term not exceeding twelve months"
+        },
+        {
+            question: "ugh! I hate that parking spot. My car will be under the sun the entire time I'm at the mall; sasa who's coming back to an over heated car.  Oh wait is that a sweet spot on the parking for people with disabilities? So…",
+            answer: "Just park under the sun, and leave my windows slightly open",
+            options: ["Just park under the sun, and leave my windows slightly open", "Park on the persons with disability spot and rush into the mall before the guard sees me."],
+            tip: "Failure to adhere to the parking rules of a particular parking bay could result to a fine of up to ksh10,00 or imprisonment for a term not exceeding 3 months."
+        },
+        {
+            question: "You don’t really remember what happened, all you know is there was a big thud and that it was a human being you knocked down. They aren't dead you can see them moving.People are starting to approach, you are afraid, your passenger princess urges to drive off, what will you do?",
+            answer: "stop the car, call the police and try help the person you hit",
+            options: ["Drive off, I'm not about to have angry people destroy my car and steal from me. I'll go to the nearest police station", "stop the car, call the police and try help the person you hit"],
+            tip: "Driving off from an accident scene without reporting could lead to a penalty of 5,000 or jail term of not more than three months."
+        },
+        {
+            question: "Apparently Njeri is tired and wants a lift on my bicycle, but my small brother, Mike and I had plans to ride together. Sasa ni nani nitatoka tu roho safi",
+            answer: "Tell Njeri Mike and I had plans already",
+            options: ["Have them both ride on my bicycle, ata Mike is Tiny", "Tell Njeri Mike and I had plans already"],
+            tip: "As a cyclist carrying more than one person is considered an offence. Failure to adhere to this rule you will be liable for a fine of ksh. 500"
+        },
+        {
+            question: "Aki Imagine I don't have bus fare. And the way nimekopa kilamtu no one will want to loan me cash. But si I can just help these touts call customers once I get 40 bob niko sawa,ama?",
+            answer: "Just ask for more money from my friends, hopefully get tomorrows fare as well",
+            options: ["Help 5 touts fill the mathree and drop off that way I'll have fare for tomorrow as well, akili mtu wangu", "Just ask for more money from my friends, hopefully get tomorrows fare as well"],
+            tip: "Touting when you aren't authorized or lincensed is considered an offence. Failure to adhere to this rule, you will be liable for a fine of ksh.1000"
+        }
       ]
     },
   ];

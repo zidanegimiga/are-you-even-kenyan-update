@@ -147,20 +147,6 @@ export const Congratulations = ({ navigation }) => {
         console.log("Back home")
     }
 
-    React.useEffect(() => {
-        setTimeout(() => {
-            score >= 50 ? playJeerSound() : playCheerSound();
-            // animation()
-            // playJeerSound()
-        }, 1000)
-    }, []);
-
-    React.useEffect(() => {
-        return sound ? () => {
-            sound.unloadAsync();
-        } : undefined;
-    }, [sound]);
-
     const startAnimation = () => {
         const pieces = [];
 
@@ -178,6 +164,25 @@ export const Congratulations = ({ navigation }) => {
 
         setConfettiPieces(pieces);
     };
+
+    const handleLessThan50Score = () =>{
+        playCheerSound();
+        startAnimation()
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            score >= 50 ? playJeerSound() : handleLessThan50Score()
+        }, 1000)
+        
+        setTimeout(animate, 1500);
+    }, []);
+
+    useEffect(() => {
+        return sound ? () => {
+            sound.unloadAsync();
+        } : undefined;
+    }, [sound]);
 
     const handleShare = async () => {
         try {
@@ -228,11 +233,6 @@ export const Congratulations = ({ navigation }) => {
         //   Alert.alert(error.message);
         // }
     };
-
-    useEffect(() => {
-        // setTimeout(startAnimation, 2500)
-        setTimeout(animate, 1500)
-    }, [])
 
     return (
         <View style={styles.pageContainer}>
@@ -330,8 +330,9 @@ const styles = StyleSheet.create({
         left: 0
     },
     text: {
-        fontSize: 40,
-        textAlign: "center"
+        fontSize: 28,
+        textAlign: "center",
+        zIndex: 10
     },
     header: {
         width: '100%',

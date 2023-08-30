@@ -98,7 +98,7 @@ export const Congratulations = ({navigation}) => {
     const animate = () => {
         fade.value = withDelay(
             1,
-            withSpring(1, { damping: 5, stiffness: 20 }) // Animate to the top of the screen
+            withSpring(1, { damping: 15, stiffness: 20 }) // Animate to the top of the screen
         );
     };
 

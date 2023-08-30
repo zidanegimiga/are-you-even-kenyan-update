@@ -9,19 +9,7 @@ const { width, height } = Dimensions.get('screen');
 
 const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) => {
     const [sound, setSound] = useState();
-    const { setScore, score, calculateScore, soundEnabled, setSoundEnabled } = useContext(GameContext);
-    
-    const playWrongSound =  async () => {
-        const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
-        setSound(sound);
-        await sound.playAsync();
-    }
-
-    const playCorrectSound =  async () => {
-        const { sound } = await Audio.Sound.createAsync(require('../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
-        setSound(sound);
-        await sound.playAsync();
-    }
+    const { calculateScore } = useContext(GameContext);
     
     React.useEffect(()=> {
         return sound ? () => {
@@ -34,24 +22,6 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
     })
 
     const navigation = useNavigation();
-
-    function handleSelectionA (index, questions){
-        if(soundEnabled){
-            playWrongSound()
-            setSelectedOption('A') 
-        } else{
-            setSelectedOption('A') 
-        }  
-    }
-
-    function handleSelectionB (index, questions){
-        setSelectedOption('B')
-        setScore(score + 1)
-        onPressB()       
-        if(soundEnabled){
-            playCorrectSound()
-        }
-    }
 
     function handleGameEnd (){
         calculateScore() 
@@ -69,10 +39,13 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
                 {
                     questions.options.map((o, i) =>{
                         return(
-                            <TouchableOpacity style={[styles.option, 
-                            // selectedOption === 'B' ? styles.selectedButton : null
-                            ]} onPress={() => { onPressB(o) }} key={i}>
-                                <Text style={styles.bigLetter}>{}</Text>
+                            <TouchableOpacity 
+                                style={[styles.option, 
+                                ]}
+                                onPress={() => { onPressB(o) }} 
+                                key={i}
+                            >
+                                <Text style={styles.bigLetter}>{""}</Text>
                                 <Text style={styles.optionText}>{o}</Text>
                             </TouchableOpacity>
                         )

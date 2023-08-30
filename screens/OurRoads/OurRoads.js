@@ -46,11 +46,6 @@ const OurRoads = () => {
     await sound.playAsync();
   }
 
-  const triggerGameEnd = () => {
-    calculateScore();
-    navigation.navigate('/games/ourRoads/congratulations')
-  }
-
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['70%', '90%']
 
@@ -76,17 +71,13 @@ const OurRoads = () => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[currentQuestionIndex] = selectedOption;
     setUserAnswers(updatedAnswers);
-    console.log("Selected: ", selectedOption)
-    console.log("Index: ", currentQuestionIndex)
-    console.log("Answer: ", data[0].qnA[currentQuestionIndex].answer)
 
     if (!isCorrect) {
       if(soundEnabled){playWrongSound()}
       
       if (currentQuestionIndex === data[0].qnA.length - 1) {
         const s = generateScore();
-        console.log("SCROE: ", s);
-        setScore(s)
+        setScore(s);
         navigation.navigate('Our Roads - Congratulations');
       } else {
         showModal();
@@ -95,8 +86,7 @@ const OurRoads = () => {
       if (soundEnabled) { playCorrectSound(); }
       if (currentQuestionIndex === data[0].qnA.length - 1) {
         const s = generateScore();
-        console.log("SCROE: ", s);
-        setScore(s)
+        setScore(s);
         navigation.navigate('Our Roads - Congratulations');
       } else{
         moveToNextQuestion();
@@ -111,7 +101,6 @@ const OurRoads = () => {
     } else {
       // All questions answered, calculate score and navigate to CongratulationsScreen
       const s = generateScore();
-      console.log("Total: ", s)
       // navigation.navigate('Our Roads - Congratulations', { s });
     }
   };
@@ -123,13 +112,19 @@ const OurRoads = () => {
         s++;
       }
     });
-    const total = s/data[0].qnA.length * 100
-    return 100 - total;
+    // total stands for the right answers percentage
+    const total = ((s + 1) / data[0].qnA.length) * 100;
+    return Math.round(100 - total);
   };
 
   const progress = (currentQuestionIndex / data[0].qnA.length) * 100;
 
   const currentQuestion = data[0].qnA[currentQuestionIndex];
+
+  const handleGameExit = () =>{
+    setUserAnswers(Array(data[0].qnA.length).fill(null));
+    navigation.navigate("Home");
+  }
 
   useEffect(() => {
     return sound ? () => {
@@ -145,8 +140,11 @@ const OurRoads = () => {
     <BottomSheetModalProvider>
       <SafeAreaView style={styles.fill}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.closeIcon} onPress={() => { navigation.navigate("Home") }}>
+          <TouchableOpacity style={styles.closeIcon} onPress={handleGameExit}>
             <Icon name="close" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.closeIcon} onPress={() => { navigation.navigate("Home") }}>
+            <Text>{userAnswers?.length}</Text>
           </TouchableOpacity>
           <View style={styles.closeIcon}>
             <Icon name="settings" />

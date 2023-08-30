@@ -14,13 +14,17 @@ import Animated, { Easing, useSharedValue, useAnimatedStyle, withSpring, withDel
 const windowHeight = Dimensions.get('window').height;
 
 
-export default function Congratulatio({ navigation }) {
-  const [sound, setSound] = useState();
-  const [showIGStory, setShowIGStory] = useState(false)
-  const { totalScore, setTotalScore, setScore, score } = useContext(GameContext)
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+export default function Somea({ navigation }) {
+  const translateY = useSharedValue(windowHeight);
+  const buttonFade = useSharedValue(0);
+  const fade = useSharedValue(0);
 
-  const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
+  const animate = () => {
+    fade.value = withDelay(
+      1,
+      withSpring(1, { damping: 15, stiffness: 20 }) // Animate to the top of the screen
+    );
+  };
 
   useEffect(() => {
     translateY.value = withDelay(
@@ -35,123 +39,28 @@ export default function Congratulatio({ navigation }) {
     };
   });
 
-  const [loaded] = useFonts({
-    'mutiara': require('../../assets/fonts/Mutiara_Display_02.ttf'),
-  });
-
-  const shareableCompRef = useRef();
-
-  const playCheerSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_more_than_50%.mp3'));
-    setSound(sound);
-    await sound.playAsync();
-  }
-
-  const playJeerSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/less_than_50.mp3'));
-    setSound(sound);
-    await sound.playAsync();
-  }
-
   const handleBackHome = () => {
-    setScore(0)
+    // setScore(0)
     // setTotalScore(0)
     navigation.navigate("Home")
     console.log("Back home")
   }
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      score >= 50 ? playCheerSound() : playJeerSound();
-      // playJeerSound()
-    }, 1000)
-  }, []);
-
-  React.useEffect(() => {
-    return sound ? () => {
-      sound.unloadAsync();
-    } : undefined;
-  }, [sound]);
-
-  const handleShare = async () => {
-    try {
-      const permission = await requestPermission()
-      const permissionToAccessMedia = permission.granted
-      const permissionToShare = await Sharing.isAvailableAsync()
-
-      const imageURI = await captureRef(shareableCompRef, {
-        format: 'png',
-        quality: 1,
-      });
-      console.log("URI: ", imageURI)
-
-      const asset = await MediaLibrary.createAssetAsync(imageURI);
-
-      if (permissionToAccessMedia) {
-        // await MediaLibrary.createAlbumAsync('Expo', asset, false);
-        console.log("Permission available")
-      } else {
-        console.log('You do not have permission to Access Media')
-      }
-
-      if (permissionToShare) {
-        Sharing.shareAsync(asset.uri)
-      } else {
-        console.log('You do not have permission to share')
-      }
-
-      // setShowIGStory(permissionToAccessMedia)
-    } catch (error) {
-      console.error('Error while sharing:', error);
-    }
-    // try {
-    //   const result = await Share.share({
-    //     message:
-    //       'React Native | A framework for building native apps using React',
-    //   });
-    //   if (result.action === Share.sharedAction) {
-    //     if (result.activityType) {
-    //       // shared with activity type of result.activityType
-    //     } else {
-    //       // shared
-    //     }
-    //   } else if (result.action === Share.dismissedAction) {
-    //     // dismissed
-    //   }
-    // } catch (error) {
-    //   Alert.alert(error.message);
-    // }
-  };
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
-    <SafeAreaView style={styles.pageContainer}>
-      {/* <View ref={shareableCompRef}>
-        <SharableComponent score={Math.round(score)} />
+    <View style={styles.pageContainer}>
+      <View>
+        <Animated.Text style={[styles.text]}>
+          On the real though, there is nothing to celebrate about. [x] number of Kenyans lose their lives every year. So why don't you be a little courteous and take care of others on the road
+        </Animated.Text>
       </View>
       <View style={styles.scoreButtonContainer}>
-        <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
-          <Text style={styles.shareText}>Share with your friends</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
           <Text style={styles.score}>Back Home</Text>
         </TouchableOpacity>
-      </View> */}
-      <View>
-        <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 32, textAlign: "center" }}>Haiya!</Text>
-        <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 32, textAlign: "center" }}>Tuseme</Text>
-        <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 32, textAlign: "center" }}>you're</Text>
-        <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 32, textAlign: "center" }}>Kenyan?</Text>
-      </View>
-      <View>
-        <Text style={{ fontFamily: 'mutiara-display-shadow', fontSize: 48, textAlign: "center" }}>{score}%</Text>
       </View>
       <View style={styles.nairobi}>
         <Image
-          source={require('../../assets/images/nairobi.png')}
+          source={require('../../assets/images/blueSkyLine.png')}
         />
       </View>
       <Animated.View
@@ -169,13 +78,13 @@ export default function Congratulatio({ navigation }) {
         style={[styles.shocked, animatedStyle]}
       >
         <Image
-          source={require('../../assets/images/shocked.png')}
+          source={require('../../assets/images/sadPeople.png')}
           style={{
             width: "100%"
           }}
         />
       </Animated.View>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -186,7 +95,12 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
-    backgroundColor: '#FDEEDA',
+    backgroundColor: '#AFDEFF',
+    paddingTop: 80
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 20
   },
   imageContainer: {
     justifyContent: 'center',
@@ -202,7 +116,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    top: '90%'
+    top: '0%',
+    zIndex: 10
   },
   scoreButton: {
     backgroundColor: '#5A3C96',
@@ -233,7 +148,7 @@ const styles = StyleSheet.create({
   },
   nairobi: {
     position: "absolute",
-    bottom: 0
+    bottom: 0,
   },
   shocked: {
     position: "absolute",
@@ -241,5 +156,9 @@ const styles = StyleSheet.create({
     height: "30%",
     bottom: 0,
     left: 0
-  }
+  },
 })
+
+
+// blue AFDEFF
+// green E6FADB

@@ -143,9 +143,6 @@ const OurRoads = () => {
           <TouchableOpacity style={styles.closeIcon} onPress={handleGameExit}>
             <Icon name="close" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.closeIcon} onPress={() => { navigation.navigate("Home") }}>
-            <Text>{userAnswers?.length}</Text>
-          </TouchableOpacity>
           <View style={styles.closeIcon}>
             <Icon name="settings" />
           </View>

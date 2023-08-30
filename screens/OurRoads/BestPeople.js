@@ -19,13 +19,12 @@ import { Audio } from 'expo-av';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 
+const windowHeight = Dimensions.get('window').height;
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
-// const colors = ["#deb7ff", "#c785ec", "#a86add", "#8549a7", "#634087"];
 
-const NUM_OF_CONFETTI = 200;
+const NUM_OF_CONFETTI = 1500;
 
 const { height, width } = Dimensions.get("window");
-const windowHeight = Dimensions.get('window').height;
 
 const relativeSin = (yPosition, offsetId) => {
     const rand = Math.sin((yPosition - 500) * (Math.PI / 540));
@@ -88,12 +87,12 @@ const ConfettiPiece = ({
     );
 };
 
-export const Congratulations = ({navigation}) => {
-    const [sound, setSound] = useState();
+
+export default function BestPeople({ navigation }) {
     const [confettiPieces, setConfettiPieces] = useState([]);
-    const { totalScore, setTotalScore, setScore, score } = useContext(GameContext)
-    const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
-    const fade = useSharedValue(0)
+    const translateY = useSharedValue(windowHeight);
+    const buttonFade = useSharedValue(0);
+    const fade = useSharedValue(0);
 
     const animate = () => {
         fade.value = withDelay(
@@ -107,8 +106,12 @@ export const Congratulations = ({navigation}) => {
             2000,
             withSpring(-100, { damping: 5, stiffness: 20 }) // Animate to the top of the screen
         );
-
     }, []);
+
+    useEffect(() => {
+        setTimeout(startAnimation, 2500)
+        setTimeout(animate, 1500)
+    }, [])
 
     const animatedStyle = useAnimatedStyle(() => {
         return {
@@ -116,54 +119,12 @@ export const Congratulations = ({navigation}) => {
         };
     });
 
-    const animatedText = useAnimatedStyle(() => {
-        return {
-            opacity: fade.value,
-        };
-    });
-
-    const [loaded] = useFonts({
-        'mutiara': require('../../assets/fonts/Mutiara_Display_02.ttf'),
-    });
-
-    const shareableCompRef = useRef();
-
-    const playCheerSound = async () => {
-        const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_more_than_50%.mp3'));
-        setSound(sound);
-        await sound.playAsync();
-    }
-
-    const playJeerSound = async () => {
-        const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/less_than_50.mp3'));
-        setSound(sound);
-        await sound.playAsync();
-    }
-
     const handleBackHome = () => {
-        setScore(0)
+        // setScore(0)
         // setTotalScore(0)
-        if(score > 50){
-            navigation.navigate("Somea")
-        } else{
-            navigation.navigate("Best People")
-        }
+        navigation.navigate("Home")
         console.log("Back home")
     }
-
-    React.useEffect(() => {
-        setTimeout(() => {
-            score >= 50 ? playCheerSound() : playJeerSound();
-            // animation()
-            // playJeerSound()
-        }, 1000)
-    }, []);
-
-    React.useEffect(() => {
-        return sound ? () => {
-            sound.unloadAsync();
-        } : undefined;
-    }, [sound]);
 
     const startAnimation = () => {
         const pieces = [];
@@ -183,78 +144,16 @@ export const Congratulations = ({navigation}) => {
         setConfettiPieces(pieces);
     };
 
-    const handleShare = async () => {
-        try {
-            const permission = await requestPermission()
-            const permissionToAccessMedia = permission.granted
-            const permissionToShare = await Sharing.isAvailableAsync()
-
-            const imageURI = await captureRef(shareableCompRef, {
-                format: 'png',
-                quality: 1,
-            });
-            console.log("URI: ", imageURI)
-
-            const asset = await MediaLibrary.createAssetAsync(imageURI);
-
-            if (permissionToAccessMedia) {
-                // await MediaLibrary.createAlbumAsync('Expo', asset, false);
-                console.log("Permission available")
-            } else {
-                console.log('You do not have permission to Access Media')
-            }
-
-            if (permissionToShare) {
-                Sharing.shareAsync(asset.uri)
-            } else {
-                console.log('You do not have permission to share')
-            }
-
-            // setShowIGStory(permissionToAccessMedia)
-        } catch (error) {
-            console.error('Error while sharing:', error);
-        }
-        // try {
-        //   const result = await Share.share({
-        //     message:
-        //       'React Native | A framework for building native apps using React',
-        //   });
-        //   if (result.action === Share.sharedAction) {
-        //     if (result.activityType) {
-        //       // shared with activity type of result.activityType
-        //     } else {
-        //       // shared
-        //     }
-        //   } else if (result.action === Share.dismissedAction) {
-        //     // dismissed
-        //   }
-        // } catch (error) {
-        //   Alert.alert(error.message);
-        // }
-    };
-
-    useEffect(() => {
-        setTimeout(startAnimation, 2500)
-        setTimeout(animate, 1500)
-    }, [])
-
     return (
         <View style={styles.pageContainer}>
             <View>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Haiya!</Animated.Text>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Tuseme</Animated.Text>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>You're</Animated.Text>
-                <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>Kenyan?</Animated.Text>
-                <View>
-                    <Animated.Text style={[styles.text, { fontFamily: 'mutiara-display-shadow' }, animatedText]}>{score}%</Animated.Text>
-                </View>
+                <Animated.Text style={[styles.text]}>
+                    We wish more Kenyans drove as well as you do. We would save more lives
+                </Animated.Text>
             </View>
             <View style={styles.scoreButtonContainer}>
-                {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
-                    <Text style={styles.shareText}>Share with your friends</Text>
-                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
-                    <Text style={styles.score}>Next</Text>
+                    <Text style={styles.score}>Back Home</Text>
                 </TouchableOpacity>
             </View>
             <Canvas style={styles.container}>
@@ -264,7 +163,7 @@ export const Congratulations = ({navigation}) => {
             </Canvas>
             <View style={styles.nairobi}>
                 <Image
-                    source={require('../../assets/images/nairobi.png')}
+                    source={require('../../assets/images/bestIntro.png')}
                 />
             </View>
             <Animated.View
@@ -282,15 +181,15 @@ export const Congratulations = ({navigation}) => {
                 style={[styles.shocked, animatedStyle]}
             >
                 <Image
-                    source={require('../../assets/images/shocked.png')}
+                    source={require('../../assets/images/bestPeople.png')}
                     style={{
                         width: "100%"
                     }}
                 />
             </Animated.View>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -305,19 +204,18 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0
     },
-    text: {
-        fontSize: 32,
-        textAlign: "center"
-    },
     header: {
         width: '100%',
         paddingLeft: 8
     },
     pageContainer: {
         flex: 1,
-        backgroundColor: '#FDEEDA',
-        position: "relative",
-        paddingTop: 80,
+        backgroundColor: '#E6FADB',
+        paddingTop: 120
+    },
+    text: {
+        textAlign: "center",
+        fontSize: 20
     },
     imageContainer: {
         justifyContent: 'center',
@@ -332,10 +230,9 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 40,
+        position: 'absolute',
+        top: '100%',
         zIndex: 10
-        // position: 'absolute',
-        // top: '90%'
     },
     scoreButton: {
         backgroundColor: '#5A3C96',
@@ -367,6 +264,7 @@ const styles = StyleSheet.create({
     nairobi: {
         position: "absolute",
         bottom: 0,
+        // height: "50%"
     },
     shocked: {
         position: "absolute",
@@ -374,5 +272,9 @@ const styles = StyleSheet.create({
         height: "30%",
         bottom: 0,
         left: 0
-    }
-});
+    },
+})
+
+
+// blue AFDEFF
+// green E6FADB

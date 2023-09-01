@@ -53,7 +53,7 @@ const ConfettiPiece = ({
     }, [yPosition]);
 
     runTiming(yPosition, height * 3, {
-        duration: 5500,
+        duration: 6000,
     });
 
     const matrix = useComputedValue(() => {
@@ -153,7 +153,7 @@ export const Congratulations = ({navigation}) => {
 
     React.useEffect(() => {
         setTimeout(() => {
-            score >= 50 ? playCheerSound() : playJeerSound();
+            score >= 50 ? playJeerSound() : playCheerSound();
             // animation()
             // playJeerSound()
         }, 1000)
@@ -254,7 +254,7 @@ export const Congratulations = ({navigation}) => {
                     <Text style={styles.shareText}>Share with your friends</Text>
                 </TouchableOpacity> */}
                 <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
-                    <Text style={styles.score}>Next</Text>
+                    <Text style={styles.score}>Next{">>"}</Text>
                 </TouchableOpacity>
             </View>
             <Canvas style={styles.container}>
@@ -281,12 +281,23 @@ export const Congratulations = ({navigation}) => {
                 }}
                 style={[styles.shocked, animatedStyle]}
             >
-                <Image
-                    source={require('../../assets/images/shocked.png')}
-                    style={{
-                        width: "100%"
-                    }}
-                />
+                {
+                    score > 50 ? (
+                        <Image
+                            source={require('../../assets/images/shocked.png')}
+                            style={{
+                                width: "100%"
+                            }}
+                        />
+                    ) : (
+                            <Image
+                                source={require('../../assets/images/shockedLessThan50.png')}
+                                style={{
+                                    width: "100%"
+                                }}
+                            />
+                    )
+                }
             </Animated.View>
         </View>
     );
@@ -345,7 +356,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 16
+        marginTop: 0,
+        zIndex: 10
     },
     shareButton: {
         backgroundColor: '#5A3C9600',

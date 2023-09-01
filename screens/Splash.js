@@ -46,7 +46,6 @@ const Splash = ({navigation}) => {
                 ref={video}
                 style={styles.video}
                 source={
-                    // uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
                      require('../assets/videos/splash.mp4')
                 }
                 useNativeControls={false}

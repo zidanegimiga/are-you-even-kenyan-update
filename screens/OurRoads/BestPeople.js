@@ -22,7 +22,7 @@ import * as MediaLibrary from 'expo-media-library';
 const windowHeight = Dimensions.get('window').height;
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
 
-const NUM_OF_CONFETTI = 1500;
+const NUM_OF_CONFETTI = 500;
 
 const { height, width } = Dimensions.get("window");
 

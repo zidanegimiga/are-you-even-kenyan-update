@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Button, Text } from 'react-native';
+import { View, StyleSheet, Button, Text, Platform } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -28,14 +28,20 @@ const Splash = ({navigation}) => {
     }, [])
 
     const updatePlaybackCallback = (status) => {
+        if(status.isLoaded){
+            console.log("Player loaded: ")
+        }
         if (status.didJustFinish) {
-            setTimeout(()=>{
-                if(nickname === null){
+            setTimeout(() => {
+                if (nickname === null) {
                     navigation.navigate('Initial')
-                } else{
+                } else {
                     navigation.navigate('Home')
                 }
             }, 3000)
+        }
+        if(status.error){
+            console.log("Error playing: ", status.error)
         }
     }
 
@@ -46,7 +52,9 @@ const Splash = ({navigation}) => {
                 ref={video}
                 style={styles.video}
                 source={
-                     require('../assets/videos/splash.mp4')
+                    Platform.OS === 'android'
+                        ? require('../assets/videos/splash.mp4')
+                        : require('../assets/videos/splash.mp4')
                 }
                 useNativeControls={false}
                 resizeMode={ResizeMode.STRETCH}

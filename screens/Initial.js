@@ -9,6 +9,7 @@ export default function Initial({navigation}) {
     'mutiara-display-shadow': require('../assets/fonts/Mutiara_Display_02_Shadow.ttf'),
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
   })
+
   const [ nextRoute, setNextRoute] = useState('')
 
   const getData = async () => {

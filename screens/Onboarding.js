@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheetModal, BottomSheetModalProvider, useBottomSheet } from '@gorhom/bottom-sheet'
 import AvatarSelection from '../components/AvatarSelection';
 import {avatars} from '../global/avatarData';
+import Icon from '../components/Icon';
 
 const OnboardingScreen = ({navigation}) => {
   const [name, setName] = useState('');
@@ -25,6 +26,10 @@ const OnboardingScreen = ({navigation}) => {
   
   const showAvatar = () =>{
     avatarModalRef.current?.present()
+  }
+
+  const hideAvatar = () =>{
+    avatarModalRef.current?.close()
   }
 
   const storeName = async (name) => {
@@ -115,7 +120,7 @@ const OnboardingScreen = ({navigation}) => {
     navigation.navigate('Home');
   };
 
-  const snapPoints = ['70%', '90%'];
+  const snapPoints = ['80%', '90%'];
 
   if (!loaded) {
     return null;
@@ -145,7 +150,7 @@ const OnboardingScreen = ({navigation}) => {
             previousBtnStyle={submitButtonStyle}
             previousBtnTextStyle={submitButtonTextStyle}
           >
-            <Avatar showAvatar={showAvatar} />
+            <Avatar showAvatar={showAvatar} selectedAvatar={selectedAvatar} />
           </ProgressStep>
         </ProgressSteps>
       </SafeAreaView>
@@ -165,16 +170,22 @@ const OnboardingScreen = ({navigation}) => {
           backgroundColor: "white"
         }}
       >
+        <View style={styles.modalHeader}>
+          {/* <TouchableOpacity onPress={hideAvatar}  style={styles.closeIcon}>
+            <Icon name="close" color={"white"} />
+          </TouchableOpacity> */}
+        </View>
         {selectedAvatar && (
           <View style={styles.preview}>
-            <Image style={styles.previewImage} source={require('../assets/avatars/man.png')} />
+            <Image style={styles.previewImage} source={selectedAvatar} />
             <Text style={styles.previewName}>{selectedAvatar.name}</Text>
           </View>
         )}
-        <AvatarSelection avatars={avatars} onSelectAvatar={onSelectAvatar} />
+        <AvatarSelection onSelectAvatar={onSelectAvatar} />
+        {/* <AvatarSelection avatars={avatars} onSelectAvatar={onSelectAvatar} /> */}
         <View style={{width: "100%", justifyContent: "center", display: "flex", alignItems: "center"}}>
           <TouchableOpacity onPress={storeAvatar} disabled={!selectedAvatar} style={styles.saveAvatarBtn}>
-            <Text style={{ color: "white" }}>Save Avatar</Text>
+            <Text style={{ color: "white" }}>Save & Close</Text>
           </TouchableOpacity>
         </View>       
       </BottomSheetModal>
@@ -185,7 +196,20 @@ const OnboardingScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FF81",
+    backgroundColor: "#FDEEDA",
+  },
+  modalHeader: {
+    width: "100%",
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  closeIcon: {
+    width: 24,
+    height: 24,
+    backgroundColor: "white",
+    borderRadius: "50%",
+    marginRight: 8
   },
   preview: {
     marginTop: 20,

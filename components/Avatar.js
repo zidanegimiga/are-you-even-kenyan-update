@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Avatar({showAvatar}){
+function Avatar({selectedAvatar, showAvatar}){
   const [avatar, setAvatar] = useState(null)
   const [loaded] = useFonts({
     'outfit-regular': require('../assets/fonts/Outfit-Regular.ttf'),
@@ -37,7 +37,7 @@ if (!loaded) {
         <View style={styles.imageContainer}>
           <Image 
             source={
-              avatar === null ? require('../assets/images/userAvatar.png') : require('../assets/avatars/man.png')
+              selectedAvatar === null ? require('../assets/images/userAvatar.png') : selectedAvatar
             }
             style={styles.avatar}
           />
@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
     alignItems: "center",    
   },
   avatar: {
-    width: 100,
-    height: 100
+    width: 144,
+    height: 144
   },
   buttonContainer: {
     width: '100%',

@@ -8,7 +8,7 @@ const Participant = () => {
     <View style={styles.participantListContainer}>
       <Text style={styles.participantPosition}>1</Text>
       <View style={styles.participantData}>
-        <Image source={require('../../assets/avatars/man.png')} style={styles.participantImage}/>
+        {/* <Image source={require('../../assets/avatars/man.png')} style={styles.participantImage}/> */}
         <View style={styles.participantDataText}>
           <Text style={styles.name}>Koffie</Text>
           <Text style={styles.score}>97%</Text>
@@ -35,21 +35,21 @@ const Leaderboard = () => {
         <View style={styles.top3}> 
           <View style={styles.leaderContainer}>
             <View style={styles.leader}>
-              <Image source={require('../../assets/avatars/man.png')} style={styles.top3Image}/>
+              {/* <Image source={require('../../assets/avatars/man.png')} style={styles.top3Image}/> */}
               <Text style={styles.leaderPosition}>1</Text>
             </View>
             <Text style={styles.leaderName}>Koffie</Text>   
           </View>
           <View style={styles.leaderContainer}>
             <View style={styles.leader}>
-              <Image source={require('../../assets/avatars/man.png')} style={styles.top3Image}/>
+              {/* <Image source={require('../../assets/avatars/man.png')} style={styles.top3Image}/> */}
               <Text style={styles.leaderPosition}>2</Text>
             </View>
             <Text style={styles.leaderName}>Koffie</Text>  
           </View>
           <View style={styles.leaderContainer}>
             <View style={styles.leader}>
-              <Image source={require('../../assets/avatars/man.png')} style={styles.top3Image}/>
+              {/* <Image source={require('../../assets/avatars/man.png')} style={styles.top3Image}/> */}
               <Text style={styles.leaderPosition}>3</Text>
             </View>
             <Text style={styles.leaderName}>Koffie</Text>   

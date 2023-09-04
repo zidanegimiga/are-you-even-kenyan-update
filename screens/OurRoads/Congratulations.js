@@ -250,9 +250,9 @@ export const Congratulations = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.scoreButtonContainer}>
-                {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+                <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                     <Text style={styles.shareText}>Share with your friends</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
                     <Text style={styles.score}>Next{">>"}</Text>
                 </TouchableOpacity>

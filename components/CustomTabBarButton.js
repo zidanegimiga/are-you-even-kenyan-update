@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {COLORS} from '../constants';
 import Svg, {Path} from 'react-native-svg';
 
 const CustomTabBarButton = props => {
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50 / 2,
-    backgroundColor: "black",
+    backgroundColor: COLORS.white,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 5,

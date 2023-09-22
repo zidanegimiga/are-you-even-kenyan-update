@@ -1,13 +1,12 @@
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
-
-const screenWidth = Dimensions.get('window').width
+import {COLORS} from '../constants';
 
 const CustomTabBar = props => {
   return (
-    <View style={styles.tabBar}>
-      {/* <View  /> */}
+    <View>
+      <View style={styles.tabBar} />
       <BottomTabBar {...props} />
     </View>
   );
@@ -17,16 +16,20 @@ export default CustomTabBar;
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 80,
-    // width: screenWidth - 40,
-
+    position: 'absolute',
+    right: 10,
+    left: 10,
+    bottom: 38,
+    height: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
     // shadowColor: COLORS.black,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 2,
-    // elevation: 3,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 3,
   },
 });

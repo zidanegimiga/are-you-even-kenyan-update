@@ -254,7 +254,7 @@ export const Congratulations = ({navigation}) => {
                     <Text style={styles.shareText}>Share with your friends</Text>
                 </TouchableOpacity> */}
                 <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
-                    <Text style={styles.score}>Next{">>"}</Text>
+                    <Text style={styles.score}>Next</Text>
                 </TouchableOpacity>
             </View>
             <Canvas style={styles.container}>

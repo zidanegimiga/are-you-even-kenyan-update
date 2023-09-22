@@ -41,50 +41,72 @@ const Icon = ({ name, size, color }) => {
     const goToHomeScreen = () => {
         if(soundEnabled){
             playBtnClickSound()
-            navigation.navigate('SelectGame');
+            navigation.goBack();
         }  else{
             navigation.navigate('SelectGame');
         }      
     };
 
-    if (name === "home") {
-        return (
-            <Home width={size} height={size} />
-        )
-    } else if (name === "leaderboard") {
-        return (
-            <Leaderboard width={size} height={size} />
-        )
-    } else if (name === "information") {
-        return (
-            <Information width={size} height={size} />
-        )
-    } else if (name === "settings") {
-        if(color === "white"){
-            return (
-                <TouchableOpacity onPress={goToInformationScreen}>
-                    <OptionsWhite width={32} height={32} fill={color}/>
-                </TouchableOpacity>
-            )
-        } else{
-            return (
-                <TouchableOpacity onPress={goToInformationScreen}>
-                    <Options width={32} height={32} fill={color}/>
-                </TouchableOpacity>
-            )
-        }
-    } else if (name === "close") {
-        return (
+    // if (name === "home") {
+    //     return (
+    //         <Home width={size} height={size} />
+    //     )
+    // } else if (name === "leaderboard") {
+    //     return (
+    //         <Leaderboard width={size} height={size} />
+    //     )
+    // } else if (name === "information") {
+    //     return (
+    //         <Information width={size} height={size} />
+    //     )
+    // } else if (name === "settings") {
+    //     if(color === "white"){
+    //         return (
+    //             <TouchableOpacity onPress={goToInformationScreen}>
+    //                 <OptionsWhite width={32} height={32} fill={color}/>
+    //             </TouchableOpacity>
+    //         )
+    //     } else{
+    //         return (
+    //             <TouchableOpacity onPress={goToInformationScreen}>
+    //                 <Options width={32} height={32} fill={color}/>
+    //             </TouchableOpacity>
+    //         )
+    //     }
+    // } else if (name === "close") {
+    //     return (
+    //         <TouchableOpacity onPress={goToHomeScreen}>
+    //             <Close width={size} height={size} />
+    //         </TouchableOpacity>            
+    //     )
+    // } else if (name === "sound") {
+    //     return (
+    //         <Sound width={size} height={size} />
+    //     )
+    // }
+
+    const iconMap = {
+        home: <Home width={size} height={size} />,
+        leaderboard: <Leaderboard width={size} height={size} />,
+        information: <Information width={size} height={size} />,
+        settings: color === "white" ? (
+            <TouchableOpacity onPress={goToInformationScreen}>
+                <OptionsWhite width={32} height={32} fill={color} />
+            </TouchableOpacity>
+        ) : (
+            <TouchableOpacity onPress={goToInformationScreen}>
+                <Options width={32} height={32} fill={color} />
+            </TouchableOpacity>
+        ),
+        close: (
             <TouchableOpacity onPress={goToHomeScreen}>
                 <Close width={size} height={size} />
             </TouchableOpacity>
-            
-        )
-    } else if (name === "sound") {
-        return (
-            <Sound width={size} height={size} />
-        )
-    }
+        ),
+        sound: <Sound width={size} height={size} />,
+    };
+
+    return iconMap[name] || iconMap["home"];
 }
 
 export default Icon;

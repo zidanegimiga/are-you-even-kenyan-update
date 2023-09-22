@@ -13,6 +13,10 @@ import Animated, { Easing, useSharedValue, useAnimatedStyle, withSpring, withDel
 
 const windowHeight = Dimensions.get('window').height;
 
+{/**
+
+*/}
+
 
 export default function Somea({ navigation }) {
   const translateY = useSharedValue(windowHeight);

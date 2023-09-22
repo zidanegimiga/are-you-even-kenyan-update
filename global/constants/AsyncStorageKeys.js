@@ -1,0 +1,1 @@
+export const QUESTION_PROGRESS_STORAGE_KEY =  "@questionProgress";

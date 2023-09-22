@@ -12,6 +12,8 @@ import { useFonts } from 'expo-font'
 import { Switch } from 'react-native'
 import ProgressBar from '../../components/ProgressBar'
 import { Audio } from 'expo-av';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { QUESTION_PROGRESS_STORAGE_KEY } from '../../global/constants/AsyncStorageKeys'
 
 const { width, height } = Dimensions.get('screen');
 
@@ -26,24 +28,31 @@ const Footer = () => {
 const OurRoads = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState(Array(data[0].qnA.length).fill(null));
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [submitButton, showSubmitButton] = useState(false)
   const [sound, setSound] = useState();
-
   const { score, setScore, totalScore, calculateScore, setSoundEnabled, soundEnabled } = useContext(GameContext);
   const navigation = useNavigation();
 
-  const playCorrectSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
-    setSound(sound);
-    await sound.playAsync();
+  const storeCurrentQuestionIndex = async (newQuestionIndex) => {
+    try {
+      await AsyncStorage.setItem(QUESTION_PROGRESS_STORAGE_KEY, String(newQuestionIndex))
+      console.log("Stored: ", newQuestionIndex)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
-  const playWrongSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
-    setSound(sound);
-    await sound.playAsync();
+  // TODO: refactor into one function
+  const playCorrectOrIncorretSound = async (isCorrect) => {
+    if (soundEnabled) {
+
+      let audio = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
+      if (!isCorrect) {
+        audio = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
+      }
+      setSound(audio.sound);
+      await sound.playAsync();
+    }
   }
 
   const bottomSheetModalRef = useRef(null)
@@ -53,9 +62,9 @@ const OurRoads = () => {
     bottomSheetModalRef.current?.present()
   }
 
-  function handleBottomSheetDismissal(){
-    setCurrentQuestionIndex(currentQuestionIndex + 1)
-    
+  function handleBottomSheetDismissal() {
+    // setCurrentQuestionIndex(currentQuestionIndex + 1);
+    moveToNextQuestion();
   }
 
   const windowWidth = Dimensions.get('window').width;
@@ -72,35 +81,26 @@ const OurRoads = () => {
     updatedAnswers[currentQuestionIndex] = selectedOption;
     setUserAnswers(updatedAnswers);
 
-    if (!isCorrect) {
-      if(soundEnabled){playWrongSound()}
-      
-      if (currentQuestionIndex === data[0].qnA.length - 1) {
-        const s = generateScore();
-        setScore(s);
-        navigation.navigate('Our Roads - Congratulations');
-      } else {
-        showModal();
-      }
+    playCorrectOrIncorretSound(isCorrect)
+    if (isCorrect) {
+      moveToNextQuestion();
     } else {
-      if (soundEnabled) { playCorrectSound(); }
-      if (currentQuestionIndex === data[0].qnA.length - 1) {
-        const s = generateScore();
-        setScore(s);
-        navigation.navigate('Our Roads - Congratulations');
-      } else{
-        moveToNextQuestion();
-      }
+      showModal();
     }
   };
 
-  const moveToNextQuestion = () => {
+  const moveToNextQuestion = async () => {
     console.log("Current Index: ", currentQuestionIndex)
     if (currentQuestionIndex < data[0].qnA.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      const newCurrentQuestionIndex = currentQuestionIndex + 1
+      setCurrentQuestionIndex(newCurrentQuestionIndex);
+      storeCurrentQuestionIndex(newCurrentQuestionIndex)
     } else {
       // All questions answered, calculate score and navigate to CongratulationsScreen
       const s = generateScore();
+      setScore(s);
+      storeCurrentQuestionIndex(0)
+      navigation.navigate('Our Roads - Congratulations');
       // navigation.navigate('Our Roads - Congratulations', { s });
     }
   };
@@ -121,7 +121,7 @@ const OurRoads = () => {
 
   const currentQuestion = data[0].qnA[currentQuestionIndex];
 
-  const handleGameExit = () =>{
+  const handleGameExit = () => {
     setUserAnswers(Array(data[0].qnA.length).fill(null));
     navigation.navigate("Home");
   }
@@ -131,6 +131,19 @@ const OurRoads = () => {
       sound.unloadAsync();
     } : undefined;
   }, [sound]);
+
+  useEffect(() => {
+    const fetchQuestionProgress = async () => {
+      const result = await AsyncStorage.getItem(QUESTION_PROGRESS_STORAGE_KEY)
+      const questionProgress = result
+      console.log(questionProgress)
+      const resultNumber = Number(questionProgress)
+      if (!isNaN(resultNumber)) {
+        setCurrentQuestionIndex(resultNumber)
+      }
+    }
+    fetchQuestionProgress().catch((e) => console.log(e))
+  })
 
   if (!loaded) {
     return null;
@@ -148,7 +161,7 @@ const OurRoads = () => {
           </View>
         </View>
         <View style={styles.progressContainerWrapper}>
-          <ProgressBar progress={progress}/>
+          <ProgressBar progress={progress} />
         </View>
         <View style={styles.flatlistContainer}>
           <Question questions={currentQuestion} showSubmit={submitButton} onPressB={handleAnswerSelect} />
@@ -170,7 +183,7 @@ const OurRoads = () => {
         }}
       >
         <ImageBackground source={require('../../assets/icons/modalBG.png')} resizeMode='cover' style={styles.modalBG}>
-          <TouchableOpacity onPress={() => bottomSheetModalRef.current?.dismiss()} style={styles.modalContentContainer}>
+          <TouchableOpacity onPress={() => { bottomSheetModalRef.current?.dismiss() }} style={styles.modalContentContainer}>
             <View>
               <Text style={styles.didYouKnowTitle}>Did you know?</Text>
               <Text style={styles.didYouKnowText}>
@@ -184,7 +197,7 @@ const OurRoads = () => {
   )
 }
 
-export default OurRoads
+export default OurRoads;
 
 const styles = StyleSheet.create({
   modalBG: {

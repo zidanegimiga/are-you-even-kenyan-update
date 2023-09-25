@@ -42,16 +42,25 @@ const OurRoads = () => {
     }
   }
 
-  // TODO: refactor into one function
   const playCorrectOrIncorretSound = async (isCorrect) => {
     if (soundEnabled) {
+      try {
+        let audio;
+        if (isCorrect) {
+          audio = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
+        } else {
+          audio = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
+        }
 
-      let audio = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Correct_Answer.mp3'));
-      if (!isCorrect) {
-        audio = await Audio.Sound.createAsync(require('../../assets/game-audio/Our_Roads_Wrong_Answer.mp3'));
+        if (audio && audio.sound) {
+          setSound(audio.sound);
+          await audio.sound.playAsync();
+        } else {
+          console.warn('Sound is not loaded properly.');
+        }
+      } catch (error) {
+        console.error('Error while loading or playing the sound:', error);
       }
-      setSound(audio.sound);
-      await sound.playAsync();
     }
   }
 

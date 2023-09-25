@@ -7,9 +7,8 @@ import {Audio} from 'expo-av';
 
 const { width, height } = Dimensions.get('screen');
 
-const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) => {
+const Question = ({ questions, onPress, }) => {
     const [sound, setSound] = useState();
-    const { calculateScore } = useContext(GameContext);
     
     React.useEffect(()=> {
         return sound ? () => {
@@ -20,13 +19,6 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
     const [loaded] = useFonts({
       'outfit-medium': require('../assets/fonts/Outfit-Medium.ttf'),
     })
-
-    const navigation = useNavigation();
-
-    function handleGameEnd (){
-        calculateScore() 
-        navigation.navigate("Our Roads - Congratulations")
-    }
 
     if (!loaded) {
         return null;
@@ -42,7 +34,7 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
                             <TouchableOpacity 
                                 style={[styles.option, 
                                 ]}
-                                onPress={() => { onPressB(o) }} 
+                                onPress={() => { onPress(o) }} 
                                 key={i}
                             >
                                 <Text style={styles.bigLetter}>{""}</Text>
@@ -51,13 +43,6 @@ const Question = ({ questions, onPressA, onPressB, next, index, showSubmit }) =>
                         )
                     })
                 }
-            </View>
-            <View style={styles.buttonsContainer}>
-                {showSubmit && (
-                    <TouchableOpacity style={styles.button} onPress={handleGameEnd}>
-                        <Text style={styles.checkScore}> Check score {">>>"} </Text>
-                    </TouchableOpacity>
-                 )}
             </View>
         </View>
     )

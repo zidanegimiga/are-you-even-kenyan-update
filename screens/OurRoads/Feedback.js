@@ -33,10 +33,9 @@ const windowHeight = Dimensions.get('window').height;
 
 const { height, width } = Dimensions.get("window");
 
-export default function BestPeople({ navigation }) {
+export default function FeedbackScreen({ navigation }) {
     const translateY = useSharedValue(windowHeight);
     const { score, setScore } = useContext(GameContext);
-
 
     const lessKenyan = score <= 50
     const { info_text, backgroundImageSrc, screenColor, screenImage } = lessKenyan ? SCREEN_CONTENT_LESS_KENYAN : SCREEN_CONTENT_MORE_KENYAN
@@ -63,9 +62,7 @@ export default function BestPeople({ navigation }) {
         <View style={[styles.pageContainer, { backgroundColor: screenColor }]}>
             <View>
                 <Animated.Text style={[styles.text]}>
-                    {
-                        info_text
-                    }
+                    {info_text}
                 </Animated.Text>
             </View>
             <View style={styles.scoreButtonContainer}>

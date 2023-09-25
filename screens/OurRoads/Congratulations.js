@@ -18,9 +18,10 @@ import * as Sharing from 'expo-sharing';
 import { Audio } from 'expo-av';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
+import ConfettiAnimation from '../../components/ConfettiAnimation';
+import { fetchScoreAndCallSetState } from '../../global/utils/AsyncStorageUtils';
 
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
-// const colors = ["#deb7ff", "#c785ec", "#a86add", "#8549a7", "#634087"];
 
 const NUM_OF_CONFETTI = 200;
 
@@ -88,12 +89,12 @@ const ConfettiPiece = ({
     );
 };
 
-export const Congratulations = ({navigation}) => {
+export const Congratulations = ({ navigation }) => {
     const [sound, setSound] = useState();
     const [confettiPieces, setConfettiPieces] = useState([]);
-    const { totalScore, setTotalScore, setScore, score } = useContext(GameContext)
     const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
     const fade = useSharedValue(0)
+    const { score } = useContext(GameContext);
 
     const animate = () => {
         fade.value = withDelay(
@@ -140,22 +141,13 @@ export const Congratulations = ({navigation}) => {
         await sound.playAsync();
     }
 
-    const handleBackHome = () => {
-        setScore(0)
-        // setTotalScore(0)
-        if(score > 50){
-            navigation.navigate("Somea")
-        } else{
-            navigation.navigate("Best People")
-        }
-        console.log("Back home")
+    const handleNext = () => {
+        navigation.navigate("Best People")
     }
 
     React.useEffect(() => {
         setTimeout(() => {
             score >= 50 ? playJeerSound() : playCheerSound();
-            // animation()
-            // playJeerSound()
         }, 1000)
     }, []);
 
@@ -253,15 +245,11 @@ export const Congratulations = ({navigation}) => {
                 {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                     <Text style={styles.shareText}>Share with your friends</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity style={styles.scoreButton} onPress={handleBackHome}>
+                <TouchableOpacity style={styles.scoreButton} onPress={handleNext}>
                     <Text style={styles.score}>Next</Text>
                 </TouchableOpacity>
             </View>
-            <Canvas style={styles.container}>
-                {confettiPieces.map((offset) => (
-                    <ConfettiPiece key={offset.offsetId} {...offset} />
-                ))}
-            </Canvas>
+            {score < 50 && <ConfettiAnimation />}
             <View style={styles.nairobi}>
                 <Image
                     source={require('../../assets/images/nairobi.png')}
@@ -290,12 +278,12 @@ export const Congratulations = ({navigation}) => {
                             }}
                         />
                     ) : (
-                            <Image
-                                source={require('../../assets/images/shockedLessThan50.png')}
-                                style={{
-                                    width: "100%"
-                                }}
-                            />
+                        <Image
+                            source={require('../../assets/images/shockedLessThan50.png')}
+                            style={{
+                                width: "100%"
+                            }}
+                        />
                     )
                 }
             </Animated.View>
@@ -306,7 +294,6 @@ export const Congratulations = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: "white",
         width,
         height,
         elevation: 50,
@@ -345,8 +332,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 40,
         zIndex: 10
-        // position: 'absolute',
-        // top: '90%'
     },
     scoreButton: {
         backgroundColor: '#5A3C96',

@@ -13,7 +13,8 @@ import { Switch } from 'react-native'
 import ProgressBar from '../../components/ProgressBar'
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { QUESTION_PROGRESS_STORAGE_KEY } from '../../global/constants/AsyncStorageKeys'
+import { QUESTION_PROGRESS_STORAGE_KEY, SCORE_OF_WRONG_ANSWERS_KEY } from '../../global/constants/AsyncStorageKeys'
+import { fetchNumberOfCorrectAnswers, storeCurrentQuestionIndex, storeCurrentScoreOfWrongAnswers, storeNumberOfCorrectAnswers } from "../../global/utils/AsyncStorageUtils"
 
 const { width, height } = Dimensions.get('screen');
 
@@ -27,20 +28,11 @@ const Footer = () => {
 
 const OurRoads = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState(Array(data[0].qnA.length).fill(null));
   const [submitButton, showSubmitButton] = useState(false)
   const [sound, setSound] = useState();
-  const { score, setScore, totalScore, calculateScore, setSoundEnabled, soundEnabled } = useContext(GameContext);
+  const { setSoundEnabled, soundEnabled, setScore } = useContext(GameContext);
   const navigation = useNavigation();
 
-  const storeCurrentQuestionIndex = async (newQuestionIndex) => {
-    try {
-      await AsyncStorage.setItem(QUESTION_PROGRESS_STORAGE_KEY, String(newQuestionIndex))
-      console.log("Stored: ", newQuestionIndex)
-    } catch (e) {
-      console.error(e)
-    }
-  }
 
   const playCorrectOrIncorretSound = async (isCorrect) => {
     if (soundEnabled) {
@@ -72,7 +64,6 @@ const OurRoads = () => {
   }
 
   function handleBottomSheetDismissal() {
-    // setCurrentQuestionIndex(currentQuestionIndex + 1);
     moveToNextQuestion();
   }
 
@@ -84,14 +75,14 @@ const OurRoads = () => {
     'outfit-regular': require('../../assets/fonts/Outfit-Regular.ttf'),
   })
 
-  const handleAnswerSelect = (selectedOption) => {
+  const handleAnswerSelect = async (selectedOption) => {
     const isCorrect = selectedOption === data[0].qnA[currentQuestionIndex].answer;
-    const updatedAnswers = [...userAnswers];
-    updatedAnswers[currentQuestionIndex] = selectedOption;
-    setUserAnswers(updatedAnswers);
 
     playCorrectOrIncorretSound(isCorrect)
+
     if (isCorrect) {
+      const oldNumberOfCorrectAnswers = await fetchNumberOfCorrectAnswers()
+      await storeNumberOfCorrectAnswers(oldNumberOfCorrectAnswers + 1)
       moveToNextQuestion();
     } else {
       showModal();
@@ -99,30 +90,26 @@ const OurRoads = () => {
   };
 
   const moveToNextQuestion = async () => {
-    console.log("Current Index: ", currentQuestionIndex)
     if (currentQuestionIndex < data[0].qnA.length - 1) {
       const newCurrentQuestionIndex = currentQuestionIndex + 1
       setCurrentQuestionIndex(newCurrentQuestionIndex);
       storeCurrentQuestionIndex(newCurrentQuestionIndex)
     } else {
-      // All questions answered, calculate score and navigate to CongratulationsScreen
-      const s = generateScore();
-      setScore(s);
+      // All questions answered, calculate score and navigate to Congratulations screen
+      const score = await generateScore()
+      setScore(score)
+
       storeCurrentQuestionIndex(0)
+      storeNumberOfCorrectAnswers(0)
       navigation.navigate('Our Roads - Congratulations');
-      // navigation.navigate('Our Roads - Congratulations', { s });
     }
   };
 
-  const generateScore = () => {
-    let s = 0;
-    data[0].qnA.forEach((question, index) => {
-      if (userAnswers[index] === question.answer) {
-        s++;
-      }
-    });
+  const generateScore = async (updatedUserAnswers) => {
+    const correctAnswers = await fetchNumberOfCorrectAnswers()
+
     // total stands for the right answers percentage
-    const total = ((s + 1) / data[0].qnA.length) * 100;
+    const total = (correctAnswers / data[0].qnA.length) * 100;
     return Math.round(100 - total);
   };
 
@@ -144,9 +131,7 @@ const OurRoads = () => {
   useEffect(() => {
     const fetchQuestionProgress = async () => {
       const result = await AsyncStorage.getItem(QUESTION_PROGRESS_STORAGE_KEY)
-      const questionProgress = result
-      console.log(questionProgress)
-      const resultNumber = Number(questionProgress)
+      const resultNumber = Number(result)
       if (!isNaN(resultNumber)) {
         setCurrentQuestionIndex(resultNumber)
       }
@@ -173,7 +158,7 @@ const OurRoads = () => {
           <ProgressBar progress={progress} />
         </View>
         <View style={styles.flatlistContainer}>
-          <Question questions={currentQuestion} showSubmit={submitButton} onPressB={handleAnswerSelect} />
+          <Question questions={currentQuestion} showSubmit={submitButton} onPress={handleAnswerSelect} />
         </View>
         <Footer />
       </SafeAreaView>

@@ -1,105 +1,45 @@
 import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Dimensions, Pressable, Button, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { GameContext } from '../../global/OurRoadsContext'
-import {
-    Canvas,
-    Group,
-    RoundedRect,
-    runTiming,
-    Skia,
-    useComputedValue,
-    useValue,
-    vec,
-} from "@shopify/react-native-skia";
-import { processTransform3d, toMatrix3 } from "react-native-redash";
 import Animated, { Easing, useSharedValue, useAnimatedStyle, withSpring, withDelay } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import * as Sharing from 'expo-sharing';
 import { Audio } from 'expo-av';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
+import ConfettiAnimation from '../../components/ConfettiAnimation';
+import blueSkyline from "../../assets/images/blueSkyLine.png"
+import greenSkyline from "../../assets/images/bestIntro.png"
+import sadPeople from "../../assets/images/sadPeople.png"
+import bestPeople from "../../assets/images/bestPeople.png"
+import { fetchScoreAndCallSetState, storeCurrentScoreOfWrongAnswers } from '../../global/utils/AsyncStorageUtils';
+
+const SCREEN_CONTENT_MORE_KENYAN = {
+    info_text: "On the real though, there is nothing to celebrate about. [x] number of Kenyans lose their lives every year. So why don't you be a little courteous and take care of others on the road",
+    backgroundImageSrc: blueSkyline,
+    screenColor: "#AFDEFF",
+    screenImage: sadPeople
+}
+
+const SCREEN_CONTENT_LESS_KENYAN = {
+    info_text: "We wish more Kenyans drove as well as you do. We would save more lives",
+    backgroundImageSrc: greenSkyline,
+    screenColor: "#E6FADB",
+    screenImage: bestPeople,
+}
+
 
 const windowHeight = Dimensions.get('window').height;
-const colors = ["magenta", "pink", "green", "blue", "yellow"];
-
-const NUM_OF_CONFETTI = 500;
 
 const { height, width } = Dimensions.get("window");
 
-const relativeSin = (yPosition, offsetId) => {
-    const rand = Math.sin((yPosition - 500) * (Math.PI / 540));
-    const otherrand = Math.cos((yPosition - 500) * (Math.PI / 540));
-    return offsetId % 2 === 0 ? rand : -otherrand;
-};
-
-const ConfettiPiece = ({
-    startingXOffset,
-    startingYOffset,
-    offsetId,
-    colorCode,
-}) => {
-    const WIDTH = 10;
-    const HEIGHT = 30;
-    const seed = Math.random() * 4;
-
-    const centerY = useValue(0);
-    const yPosition = useValue(startingYOffset);
-
-    const origin = useComputedValue(() => {
-        centerY.current = yPosition.current + HEIGHT / 2;
-        const centerX = startingXOffset + WIDTH / 2;
-        return vec(centerX, centerY.current);
-    }, [yPosition]);
-
-    runTiming(yPosition, height * 3, {
-        duration: 5500,
-    });
-
-    const matrix = useComputedValue(() => {
-        const rotateZ =
-            relativeSin(yPosition.current, Math.round(Number(offsetId))) * seed * 2.5;
-        const rotateY =
-            relativeSin(yPosition.current, Math.round(Number(offsetId))) * seed * 1.5;
-        const rotateX =
-            relativeSin(yPosition.current, Math.round(Number(offsetId))) * seed * 1.5;
-        const mat3 = toMatrix3(
-            processTransform3d([
-                { rotateY: rotateY },
-                { rotateX: rotateX },
-                { rotateZ: rotateZ },
-            ])
-        );
-
-        return Skia.Matrix(mat3);
-    }, [yPosition]);
-
-    return (
-        <Group matrix={matrix} origin={origin}>
-            <RoundedRect
-                r={8}
-                x={startingXOffset}
-                y={yPosition}
-                height={WIDTH}
-                width={HEIGHT}
-                color={colors[colorCode]}
-            />
-        </Group>
-    );
-};
-
-
 export default function BestPeople({ navigation }) {
-    const [confettiPieces, setConfettiPieces] = useState([]);
     const translateY = useSharedValue(windowHeight);
-    const buttonFade = useSharedValue(0);
-    const fade = useSharedValue(0);
+    const { score, setScore } = useContext(GameContext);
 
-    const animate = () => {
-        fade.value = withDelay(
-            1,
-            withSpring(1, { damping: 15, stiffness: 20 }) // Animate to the top of the screen
-        );
-    };
+
+    const lessKenyan = score <= 50
+    const { info_text, backgroundImageSrc, screenColor, screenImage } = lessKenyan ? SCREEN_CONTENT_LESS_KENYAN : SCREEN_CONTENT_MORE_KENYAN
 
     useEffect(() => {
         translateY.value = withDelay(
@@ -108,11 +48,6 @@ export default function BestPeople({ navigation }) {
         );
     }, []);
 
-    useEffect(() => {
-        setTimeout(startAnimation, 2500)
-        setTimeout(animate, 1500)
-    }, [])
-
     const animatedStyle = useAnimatedStyle(() => {
         return {
             transform: [{ translateY: translateY.value }],
@@ -120,35 +55,17 @@ export default function BestPeople({ navigation }) {
     });
 
     const handleBackHome = () => {
-        // setScore(0)
-        // setTotalScore(0)
+        setScore(0)
         navigation.navigate("Home")
-        console.log("Back home")
     }
 
-    const startAnimation = () => {
-        const pieces = [];
-
-        for (let i = 0; i < NUM_OF_CONFETTI; i++) {
-            const startingXOffset = Math.random() * width;
-            const startingYOffset = -Math.random() * (height * 3);
-            const id = i + Math.random() + "";
-            pieces.push({
-                offsetId: id,
-                startingXOffset,
-                startingYOffset,
-                colorCode: i % colors.length,
-            });
-        }
-
-        setConfettiPieces(pieces);
-    };
-
     return (
-        <View style={styles.pageContainer}>
+        <View style={[styles.pageContainer, { backgroundColor: screenColor }]}>
             <View>
                 <Animated.Text style={[styles.text]}>
-                    We wish more Kenyans drove as well as you do. We would save more lives
+                    {
+                        info_text
+                    }
                 </Animated.Text>
             </View>
             <View style={styles.scoreButtonContainer}>
@@ -156,14 +73,10 @@ export default function BestPeople({ navigation }) {
                     <Text style={styles.score}>Back Home</Text>
                 </TouchableOpacity>
             </View>
-            <Canvas style={styles.container}>
-                {confettiPieces.map((offset) => (
-                    <ConfettiPiece key={offset.offsetId} {...offset} />
-                ))}
-            </Canvas>
+            {lessKenyan && <ConfettiAnimation />}
             <View style={styles.nairobi}>
                 <Image
-                    source={require('../../assets/images/bestIntro.png')}
+                    source={backgroundImageSrc}
                 />
             </View>
             <Animated.View
@@ -181,7 +94,7 @@ export default function BestPeople({ navigation }) {
                 style={[styles.shocked, animatedStyle]}
             >
                 <Image
-                    source={require('../../assets/images/bestPeople.png')}
+                    source={screenImage}
                     style={{
                         width: "100%"
                     }}
@@ -194,7 +107,6 @@ export default function BestPeople({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: "white",
         width,
         height,
         elevation: 50,
@@ -264,7 +176,6 @@ const styles = StyleSheet.create({
     nairobi: {
         position: "absolute",
         bottom: 0,
-        // height: "50%"
     },
     shocked: {
         position: "absolute",
@@ -274,7 +185,3 @@ const styles = StyleSheet.create({
         left: 0
     },
 })
-
-
-// blue AFDEFF
-// green E6FADB

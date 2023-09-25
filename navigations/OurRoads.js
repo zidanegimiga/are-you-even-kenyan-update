@@ -2,7 +2,6 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OurRoads from '../screens/OurRoads/OurRoads';
 import { Congratulations } from '../screens/OurRoads/Congratulations';
-import Somea from '../screens/OurRoads/Somea';
 import FeedbackScreen from '../screens/OurRoads/Feedback';
 
 const Stack = createNativeStackNavigator();
@@ -19,11 +18,6 @@ function OurRoadsNavigator() {
         name={"Our Roads - Congratulations"}
         options={{ headerShown: false }}
         component={Congratulations}
-      />
-      <Stack.Screen
-        name={"Somea"}
-        options={{ headerShown: false }}
-        component={Somea}
       />
       <Stack.Screen
         name={"Best People"}

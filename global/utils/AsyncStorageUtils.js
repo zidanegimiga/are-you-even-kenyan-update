@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { QUESTION_PROGRESS_STORAGE_KEY, C, CORRECT_ANSWERS_KEY } from "../constants/AsyncStorageKeys"
+import { QUESTION_PROGRESS_STORAGE_KEY, CORRECT_ANSWERS_KEY } from "../constants/AsyncStorageKeys"
 
 const storeCurrentQuestionIndex = async (newQuestionIndex) => {
     try {
@@ -26,6 +26,7 @@ const fetchScoreAndCallSetState = async (setState) => {
         setState(resultAsNumber)
     }
 }
+
 const storeNumberOfCorrectAnswers = async (score) => {
     console.log("Trying store " + score + " number of correct ans")
     try {

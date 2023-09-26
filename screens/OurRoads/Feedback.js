@@ -15,7 +15,7 @@ import bestPeople from "../../assets/images/bestPeople.png"
 import { fetchScoreAndCallSetState, storeCurrentScoreOfWrongAnswers } from '../../global/utils/AsyncStorageUtils';
 
 const SCREEN_CONTENT_MORE_KENYAN = {
-    info_text: "On the real though, there is nothing to celebrate about. [x] number of Kenyans lose their lives every year. So why don't you be a little courteous and take care of others on the road",
+    info_text: "On the real though, there is nothing to celebrate about. Averagely, 3000 Kenyans lose their lives every year. So why don't you be a little courteous and take care of others on the road",
     backgroundImageSrc: blueSkyline,
     screenColor: "#AFDEFF",
     screenImage: sadPeople
@@ -140,8 +140,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         position: 'absolute',
-        top: '100%',
-        zIndex: 10
+        top: '45%',
+        zIndex: 15
     },
     scoreButton: {
         backgroundColor: '#5A3C96',

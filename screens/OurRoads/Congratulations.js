@@ -19,7 +19,6 @@ import { Audio } from 'expo-av';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import ConfettiAnimation from '../../components/ConfettiAnimation';
-import { fetchScoreAndCallSetState } from '../../global/utils/AsyncStorageUtils';
 
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
 
@@ -34,66 +33,15 @@ const relativeSin = (yPosition, offsetId) => {
     return offsetId % 2 === 0 ? rand : -otherrand;
 };
 
-const ConfettiPiece = ({
-    startingXOffset,
-    startingYOffset,
-    offsetId,
-    colorCode,
-}) => {
-    const WIDTH = 10;
-    const HEIGHT = 30;
-    const seed = Math.random() * 4;
-
-    const centerY = useValue(0);
-    const yPosition = useValue(startingYOffset);
-
-    const origin = useComputedValue(() => {
-        centerY.current = yPosition.current + HEIGHT / 2;
-        const centerX = startingXOffset + WIDTH / 2;
-        return vec(centerX, centerY.current);
-    }, [yPosition]);
-
-    runTiming(yPosition, height * 3, {
-        duration: 6000,
-    });
-
-    const matrix = useComputedValue(() => {
-        const rotateZ =
-            relativeSin(yPosition.current, Math.round(Number(offsetId))) * seed * 2.5;
-        const rotateY =
-            relativeSin(yPosition.current, Math.round(Number(offsetId))) * seed * 1.5;
-        const rotateX =
-            relativeSin(yPosition.current, Math.round(Number(offsetId))) * seed * 1.5;
-        const mat3 = toMatrix3(
-            processTransform3d([
-                { rotateY: rotateY },
-                { rotateX: rotateX },
-                { rotateZ: rotateZ },
-            ])
-        );
-
-        return Skia.Matrix(mat3);
-    }, [yPosition]);
-
-    return (
-        <Group matrix={matrix} origin={origin}>
-            <RoundedRect
-                r={8}
-                x={startingXOffset}
-                y={yPosition}
-                height={WIDTH}
-                width={HEIGHT}
-                color={colors[colorCode]}
-            />
-        </Group>
-    );
-};
 
 export const Congratulations = ({ navigation }) => {
     const [sound, setSound] = useState();
     const [confettiPieces, setConfettiPieces] = useState([]);
+    const [isButtonVisible, setButtonVisible] = useState(false);
+
     const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
     const fade = useSharedValue(0)
+
     const { score } = useContext(GameContext);
 
     const animate = () => {
@@ -230,6 +178,14 @@ export const Congratulations = ({ navigation }) => {
         setTimeout(animate, 1500)
     }, [])
 
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setButtonVisible(true);
+        }, 2000);
+
+        return () => clearTimeout(timeoutId);
+    }, []);
+
     return (
         <View style={styles.pageContainer}>
             <View>
@@ -245,9 +201,12 @@ export const Congratulations = ({ navigation }) => {
                 {/* <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                     <Text style={styles.shareText}>Share with your friends</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity style={styles.scoreButton} onPress={handleNext}>
-                    <Text style={styles.score}>Next</Text>
-                </TouchableOpacity>
+                {
+                    isButtonVisible && 
+                    <TouchableOpacity style={styles.scoreButton} onPress={handleNext}>
+                        <Text style={styles.score}>Next</Text>
+                    </TouchableOpacity>
+                }
             </View>
             {score < 50 && <ConfettiAnimation />}
             <View style={styles.nairobi}>

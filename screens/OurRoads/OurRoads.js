@@ -28,6 +28,7 @@ const Footer = () => {
 
 const OurRoads = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [randomIndex, setRandomIndex] = useState(0);
   const [submitButton, showSubmitButton] = useState(false)
   const [sound, setSound] = useState();
   const { setSoundEnabled, soundEnabled, setScore } = useContext(GameContext);
@@ -76,6 +77,7 @@ const OurRoads = () => {
   })
 
   const handleAnswerSelect = async (selectedOption) => {
+    showRandomImage()
     const isCorrect = selectedOption === data[0].qnA[currentQuestionIndex].answer;
 
     playCorrectOrIncorretSound(isCorrect)
@@ -120,6 +122,11 @@ const OurRoads = () => {
   const handleGameExit = () => {
     setUserAnswers(Array(data[0].qnA.length).fill(null));
     navigation.navigate("Home");
+  }
+
+  function showRandomImage(){
+    const randomNumber = Math.floor(Math.random() * 2)
+    setRandomIndex(randomNumber);
   }
 
   useEffect(() => {
@@ -168,15 +175,15 @@ const OurRoads = () => {
         snapPoints={snapPoints}
         backgroundStyle={{
           borderRadius: 24,
+          // backgroundColor: "white"
           backgroundColor: "#5A3C96"
         }}
         onDismiss={handleBottomSheetDismissal}
         enablePanDownToClose={true}
         handleIndicatorStyle={{
-          backgroundColor: "white",
+          backgroundColor: "black",
         }}
       >
-        <ImageBackground source={require('../../assets/icons/modalBG.png')} resizeMode='cover' style={styles.modalBG}>
           <TouchableOpacity onPress={() => { bottomSheetModalRef.current?.dismiss() }} style={styles.modalContentContainer}>
             <View>
               <Text style={styles.didYouKnowTitle}>Did you know?</Text>
@@ -184,8 +191,14 @@ const OurRoads = () => {
                 {currentQuestion.tip}
               </Text>
             </View>
+          {
+            randomIndex === 0 ? (
+              <Image source={require('../../assets/images/serious.png')} style={styles.modalImage} />
+            ) : (
+                <Image source={require('../../assets/images/sideEye.png')} style={styles.modalImage} />
+            )
+          }
           </TouchableOpacity>
-        </ImageBackground>
       </BottomSheetModal>
     </BottomSheetModalProvider>
   )
@@ -242,7 +255,8 @@ const styles = StyleSheet.create({
 
   modalContentContainer: {
     flex: 1,
-    padding: 24
+    padding: 24,
+    position: "relative"
   },
 
   didYouKnowTitle: {
@@ -255,5 +269,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'outfit-regular',
     marginTop: 16
+  },
+  modalImage: {
+    position: "absolute",
+    bottom: "22%",
+    right: 0,
+    width: "70%",
+    height: "45%"
   }
 })

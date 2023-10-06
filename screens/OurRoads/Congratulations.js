@@ -27,12 +27,6 @@ const NUM_OF_CONFETTI = 200;
 const { height, width } = Dimensions.get("window");
 const windowHeight = Dimensions.get('window').height;
 
-const relativeSin = (yPosition, offsetId) => {
-    const rand = Math.sin((yPosition - 500) * (Math.PI / 540));
-    const otherrand = Math.cos((yPosition - 500) * (Math.PI / 540));
-    return offsetId % 2 === 0 ? rand : -otherrand;
-};
-
 
 export const Congratulations = ({ navigation }) => {
     const [sound, setSound] = useState();

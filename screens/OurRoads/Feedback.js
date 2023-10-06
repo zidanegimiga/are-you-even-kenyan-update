@@ -70,7 +70,6 @@ export default function FeedbackScreen({ navigation }) {
                     <Text style={styles.score}>Back Home</Text>
                 </TouchableOpacity>
             </View>
-            {isLessKenyan && <ConfettiAnimation />}
             <View style={styles.nairobi}>
                 <Image
                     source={backgroundImageSrc}

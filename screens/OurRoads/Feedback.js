@@ -12,7 +12,7 @@ import blueSkyline from "../../assets/images/blueSkyLine.png"
 import greenSkyline from "../../assets/images/bestIntro.png"
 import sadPeople from "../../assets/images/sadPeople.png"
 import bestPeople from "../../assets/images/bestPeople.png"
-import { fetchScoreAndCallSetState, storeCurrentScoreOfWrongAnswers } from '../../global/utils/AsyncStorageUtils';
+import { calculateIsLessKenyan } from '../../components/OurRoads/Utils/OurRoadsUtils.js';
 
 const SCREEN_CONTENT_MORE_KENYAN = {
     info_text: "On the real though, there is nothing to celebrate about. Averagely, 3000 Kenyans lose their lives every year. So why don't you be a little courteous and take care of others on the road",
@@ -37,8 +37,8 @@ export default function FeedbackScreen({ navigation }) {
     const translateY = useSharedValue(windowHeight);
     const { score, setScore } = useContext(GameContext);
 
-    const lessKenyan = score <= 50
-    const { info_text, backgroundImageSrc, screenColor, screenImage } = lessKenyan ? SCREEN_CONTENT_LESS_KENYAN : SCREEN_CONTENT_MORE_KENYAN
+    const isLessKenyan = calculateIsLessKenyan(score)
+    const { info_text, backgroundImageSrc, screenColor, screenImage } = isLessKenyan ? SCREEN_CONTENT_LESS_KENYAN : SCREEN_CONTENT_MORE_KENYAN
 
     useEffect(() => {
         translateY.value = withDelay(
@@ -70,7 +70,7 @@ export default function FeedbackScreen({ navigation }) {
                     <Text style={styles.score}>Back Home</Text>
                 </TouchableOpacity>
             </View>
-            {lessKenyan && <ConfettiAnimation />}
+            {isLessKenyan && <ConfettiAnimation />}
             <View style={styles.nairobi}>
                 <Image
                     source={backgroundImageSrc}

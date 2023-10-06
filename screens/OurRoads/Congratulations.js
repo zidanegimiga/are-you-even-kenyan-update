@@ -19,6 +19,7 @@ import { Audio } from 'expo-av';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import ConfettiAnimation from '../../components/ConfettiAnimation';
+import { calculateIsLessKenyan } from '../../components/OurRoads/Utils/OurRoadsUtils';
 
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
 
@@ -36,6 +37,7 @@ export const Congratulations = ({ navigation }) => {
     const fade = useSharedValue(0)
 
     const { score } = useContext(GameContext);
+    const isLessKenyan = calculateIsLessKenyan(score)
 
     const animate = () => {
         fade.value = withDelay(
@@ -88,7 +90,7 @@ export const Congratulations = ({ navigation }) => {
 
     React.useEffect(() => {
         setTimeout(() => {
-            score >= 50 ? playJeerSound() : playCheerSound();
+            isLessKenyan ?  playCheerSound() : playJeerSound() ;
         }, 1000)
     }, []);
 
@@ -182,7 +184,7 @@ export const Congratulations = ({ navigation }) => {
                     </TouchableOpacity>
                 }
             </View>
-            {score < 50 && <ConfettiAnimation />}
+            {isLessKenyan && <ConfettiAnimation />}
             <View style={styles.nairobi}>
                 <Image
                     source={require('../../assets/images/nairobi.png')}

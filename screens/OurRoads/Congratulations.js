@@ -208,21 +208,22 @@ export const Congratulations = ({ navigation }) => {
                 style={[styles.shocked, animatedStyle]}
             >
                 {
-                    score > 50 ? (
-                        <Image
-                            source={require('../../assets/images/shocked.png')}
-                            style={{
-                                width: "100%"
-                            }}
-                        />
-                    ) : (
+                    isLessKenyan ? 
+                     (
                         <Image
                             source={require('../../assets/images/shockedLessThan50.png')}
                             style={{
                                 width: "100%"
                             }}
                         />
-                    )
+                    ) : ( 
+                    <Image
+                    source={require('../../assets/images/shocked.png')}
+                    style={{
+                        width: "100%"
+                    }}
+                />
+                )
                 }
             </Animated.View>
         </View>

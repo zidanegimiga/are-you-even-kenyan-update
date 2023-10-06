@@ -86,6 +86,9 @@ export const Congratulations = ({ navigation }) => {
 
     const handleNext = () => {
         navigation.navigate("Best People")
+        if(sound) {
+            sound.unloadAsync();
+        } 
     }
 
     React.useEffect(() => {
@@ -94,11 +97,11 @@ export const Congratulations = ({ navigation }) => {
         }, 1000)
     }, []);
 
-    React.useEffect(() => {
-        return sound ? () => {
-            sound.unloadAsync();
-        } : undefined;
-    }, [sound]);
+    // React.useEffect(() => {
+    //     return sound ? () => {
+    //         sound.unloadAsync();
+    //     } : undefined;
+    // }, [sound]);
 
     const handleShare = async () => {
         try {

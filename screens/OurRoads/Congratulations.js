@@ -30,7 +30,6 @@ const windowHeight = Dimensions.get('window').height;
 
 export const Congratulations = ({ navigation }) => {
     const [sound, setSound] = useState();
-    const [confettiPieces, setConfettiPieces] = useState([]);
     const [isButtonVisible, setButtonVisible] = useState(false);
 
     const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
@@ -99,24 +98,6 @@ export const Congratulations = ({ navigation }) => {
         } : undefined;
     }, [sound]);
 
-    const startAnimation = () => {
-        const pieces = [];
-
-        for (let i = 0; i < NUM_OF_CONFETTI; i++) {
-            const startingXOffset = Math.random() * width;
-            const startingYOffset = -Math.random() * (height * 3);
-            const id = i + Math.random() + "";
-            pieces.push({
-                offsetId: id,
-                startingXOffset,
-                startingYOffset,
-                colorCode: i % colors.length,
-            });
-        }
-
-        setConfettiPieces(pieces);
-    };
-
     const handleShare = async () => {
         try {
             const permission = await requestPermission()
@@ -168,7 +149,6 @@ export const Congratulations = ({ navigation }) => {
     };
 
     useEffect(() => {
-        setTimeout(startAnimation, 2500)
         setTimeout(animate, 1500)
     }, [])
 

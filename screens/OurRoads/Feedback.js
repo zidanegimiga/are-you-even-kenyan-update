@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: "center",
-        fontSize: 20
+        fontSize: 20,
+        padding: 20,
     },
     imageContainer: {
         justifyContent: 'center',

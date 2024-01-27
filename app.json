@@ -14,7 +14,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#FDEEDA"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.areyouevenkenyan.ios"
@@ -42,7 +44,8 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }

@@ -19,6 +19,7 @@ import { Audio } from 'expo-av';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import ConfettiAnimation from '../../components/ConfettiAnimation';
+import { calculateIsLessKenyan } from '../../components/OurRoads/Utils/OurRoadsUtils';
 
 const colors = ["magenta", "pink", "green", "blue", "yellow"];
 
@@ -27,22 +28,16 @@ const NUM_OF_CONFETTI = 200;
 const { height, width } = Dimensions.get("window");
 const windowHeight = Dimensions.get('window').height;
 
-const relativeSin = (yPosition, offsetId) => {
-    const rand = Math.sin((yPosition - 500) * (Math.PI / 540));
-    const otherrand = Math.cos((yPosition - 500) * (Math.PI / 540));
-    return offsetId % 2 === 0 ? rand : -otherrand;
-};
-
 
 export const Congratulations = ({ navigation }) => {
     const [sound, setSound] = useState();
-    const [confettiPieces, setConfettiPieces] = useState([]);
     const [isButtonVisible, setButtonVisible] = useState(false);
 
     const translateY = useSharedValue(windowHeight); // Start from the bottom of the screen
     const fade = useSharedValue(0)
 
     const { score } = useContext(GameContext);
+    const isLessKenyan = calculateIsLessKenyan(score)
 
     const animate = () => {
         fade.value = withDelay(
@@ -91,37 +86,22 @@ export const Congratulations = ({ navigation }) => {
 
     const handleNext = () => {
         navigation.navigate("Best People")
+        if(sound) {
+            sound.unloadAsync();
+        } 
     }
 
     React.useEffect(() => {
         setTimeout(() => {
-            score >= 50 ? playJeerSound() : playCheerSound();
+            isLessKenyan ?  playCheerSound() : playJeerSound() ;
         }, 1000)
     }, []);
 
-    React.useEffect(() => {
-        return sound ? () => {
-            sound.unloadAsync();
-        } : undefined;
-    }, [sound]);
-
-    const startAnimation = () => {
-        const pieces = [];
-
-        for (let i = 0; i < NUM_OF_CONFETTI; i++) {
-            const startingXOffset = Math.random() * width;
-            const startingYOffset = -Math.random() * (height * 3);
-            const id = i + Math.random() + "";
-            pieces.push({
-                offsetId: id,
-                startingXOffset,
-                startingYOffset,
-                colorCode: i % colors.length,
-            });
-        }
-
-        setConfettiPieces(pieces);
-    };
+    // React.useEffect(() => {
+    //     return sound ? () => {
+    //         sound.unloadAsync();
+    //     } : undefined;
+    // }, [sound]);
 
     const handleShare = async () => {
         try {
@@ -174,7 +154,6 @@ export const Congratulations = ({ navigation }) => {
     };
 
     useEffect(() => {
-        setTimeout(startAnimation, 2500)
         setTimeout(animate, 1500)
     }, [])
 
@@ -208,7 +187,7 @@ export const Congratulations = ({ navigation }) => {
                     </TouchableOpacity>
                 }
             </View>
-            {score < 50 && <ConfettiAnimation />}
+            {isLessKenyan && <ConfettiAnimation />}
             <View style={styles.nairobi}>
                 <Image
                     source={require('../../assets/images/nairobi.png')}
@@ -229,21 +208,22 @@ export const Congratulations = ({ navigation }) => {
                 style={[styles.shocked, animatedStyle]}
             >
                 {
-                    score > 50 ? (
-                        <Image
-                            source={require('../../assets/images/shocked.png')}
-                            style={{
-                                width: "100%"
-                            }}
-                        />
-                    ) : (
+                    isLessKenyan ? 
+                     (
                         <Image
                             source={require('../../assets/images/shockedLessThan50.png')}
                             style={{
                                 width: "100%"
                             }}
                         />
-                    )
+                    ) : ( 
+                    <Image
+                    source={require('../../assets/images/shocked.png')}
+                    style={{
+                        width: "100%"
+                    }}
+                />
+                )
                 }
             </Animated.View>
         </View>
